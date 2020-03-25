@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene
+      inspector="https://cdn.jsdelivr.net/gh/aframevr/aframe-inspector@master/dist/aframe-inspector.min.js"
+    >
+    </a-scene>
+    <a-scene>
+      <a-assets>
+        <video id="rampage" autoplay loop="true" src="rampage.m4v"></video>
+        <a-asset-item id="room" src="cineroom.gltf"></a-asset-item>
+      </a-assets>
+
+      <a-video
+        src="#rampage"
+        width="10"
+        height="6"
+        position="-0.5 4.5 -7.5"
+      ></a-video>
+
+      <a-entity
+        gltf-model="#room"
+        position="0 0 -2"
+        rotation="0 90 0"
+        scale="0.2 0.2 0.2"
+      ></a-entity>
+
+      <a-sky color="#000"></a-sky>
+    </a-scene>
+  </body>
+</html>
