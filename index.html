@@ -1,57 +1,141 @@
 <html>
   <head>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://unpkg.com/aframe-state-component@6.8.0/dist/aframe-state-component.min.js"></script> 
+    <script src="https://unpkg.com/aframe-state-component@6.8.0/dist/aframe-state-component.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
 
     <script>
-      const socket = io(':8000')
-      const scene = document.querySelector('a-scene')
-
       AFRAME.registerComponent('a-face', {
         init: function () {
           // Code here.
-          console.log(this.el);
+          console.log(this.el)
         },
-        tick: function(){
+        tick: function () {
           const annotations = this.el.getAttribute('annotations')
           console.log('annotations', annotations)
           this.el.position = annotations.midwayBetweenEyes[0]
           this.el.rotation = annotations.tilt
-        }
-      });
-
-      socket.on('faces', (newFaces) => {
-        console.log('newFaces', newFaces)
-        if (!AFRAME.scenes.length) return
-        let faceEl = document.getElementById(`face-${face.id}`)
-        if (!faceEl) {
-          faceEl = document.createElement('a-box')
-          scene.appendChild(faceEl)
-        }
-        faceEl.setAttribute('tilt', face.tilt)
-        faceEl.setAttribute('annotations', face.annotations)
+        },
       })
     </script>
   </head>
   <body>
-    <a-scene>
-      <a-assets>
-        <a-asset-item id="room" src="cineroom.gltf"></a-asset-item>
-      </a-assets>
-
-      <a-entity
-        gltf-model="#room"
-        position="0 0 -2"
-        rotation="0 90 0"
-        scale="0.2 0.2 0.2"
-      ></a-entity>
-
-      <a-sky color="#000"></a-sky>
-
+    <a-scene stats>
+      <a-plane
+        position="0 0 -4"
+        rotation="-90 0 0"
+        width="4"
+        height="4"
+        color="#7BC8A4"
+      ></a-plane>
+      <a-sky color="#ececec"></a-sky>
     </a-scene>
+    <video
+      height="200"
+      width="200"
+      style="position: fixed; bottom: 0; right: 0;"
+      autoPlay
+      muted
+    ></video>
+
+    <script>
+      const socket = io(':8000')
+      const scene = document.querySelector('a-scene')
+
+      const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+      const pick = (obj, keys) =>
+        keys
+          .map((k) => (k in obj ? { [k]: obj[k] } : {}))
+          .reduce((res, o) => Object.assign(res, o), {})
+
+      const calculateTilt = ({ annotations }) => {
+        const dX = annotations.rightCheek[0][0] - annotations.leftCheek[0][0]
+        const dY = annotations.rightCheek[0][1] - annotations.leftCheek[0][1]
+        const degree = -Math.atan(dY / dX) * 45
+        return degree
+      }
+
+      const detectFace = async (model, video, emitFace) => {
+        const faces = await Promise.race([
+          model.estimateFaces(video),
+          timeout(200),
+        ])
+
+        if (faces && faces.length) {
+          const face = faces[0]
+
+          const strippedFace = {
+            ...pick(face, ['annotations']),
+            tilt: calculateTilt(face),
+          }
+
+          emitFace(strippedFace)
+        }
+      }
+
+      async function main() {
+        const video = document.querySelector('video')
+        const model = await facemesh.load()
+
+        setInterval(() => {
+          detectFace(model, video, (face) => {
+            socket.emit('face', face)
+          })
+        }, 100)
+      }
+
+      socket.on('faces', (faces) => {
+        if (!AFRAME.scenes.length) {
+          return
+        }
+
+        faces.forEach((face, i) => {
+          let faceEl = document.getElementById(`face-${i}`)
+
+          if (!faceEl) {
+            faceEl = document.createElement('a-box')
+
+            faceEl.setAttribute('position', '0 0 -4')
+            faceEl.setAttribute('material', 'src: minecraft.png; repeat: 1 1')
+            faceEl.setAttribute('a-face')
+            faceEl.setAttribute('id', `face-${i}`)
+
+            scene.appendChild(faceEl)
+          }
+
+          faceEl.setAttribute('tilt', face.tilt)
+          faceEl.setAttribute('annotations', JSON.stringify(face.annotations))
+        })
+      })
+
+      const startStream = async (video) => {
+        try {
+          const video = document.querySelector('video')
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'user' },
+          })
+
+          if (!stream) {
+            throw new Error('You need to allow video to use this service.')
+          }
+
+          video.srcObject = stream
+          video.onloadeddata = () => {
+            main()
+          }
+        } catch (err) {
+          alert(
+            'Sorry. You need to use Google Chrome or Firefox to use this. ' +
+              err.message
+          )
+        }
+      }
+
+      startStream()
+    </script>
   </body>
 </html>

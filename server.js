@@ -11,9 +11,7 @@ console.log('listening on port ', port)
 const allFaces = {}
 
 app.use(express.static(path.join(__dirname, './')))
-app.get('/', (req, res) =>
-  res.sendFile(path.join(__dirname, '/index.html'))
-)
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/index.html')))
 
 io.on('connection', (client) => {
   client.on('face', (face) => {
@@ -21,7 +19,8 @@ io.on('connection', (client) => {
   })
 
   setInterval(() => {
-    if (!allFaces.length) return
+    if (!Object.keys(allFaces).length) return
+
     io.emit(
       'faces',
       Object.values(allFaces).reduce(
@@ -29,7 +28,7 @@ io.on('connection', (client) => {
         []
       )
     )
-  }, 100)
+  }, 1000)
 
   client.on('disconnect', (reason) => {
     delete allFaces[client.id]

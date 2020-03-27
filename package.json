@@ -26,5 +26,8 @@
     "serve": "^11.3.0",
     "socket.io": "^2.3.0",
     "aframe-state-component": "^6.8.0"
+  },
+  "devDependencies": {
+    "prettier": "2.0.2"
   }
 }
