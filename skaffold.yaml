@@ -1,0 +1,11 @@
+apiVersion: skaffold/v2alpha4
+kind: Config
+metadata:
+  name: stage
+build:
+  artifacts:
+  - image: irony/stage
+deploy:
+  kubectl:
+    manifests:
+    - k8s/stage-service.yaml

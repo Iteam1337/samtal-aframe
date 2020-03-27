@@ -3,8 +3,8 @@
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-state-component@6.8.0/dist/aframe-state-component.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/tf-backend-wasm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
 
     <script>
@@ -24,7 +24,6 @@
   <body>
     <a-scene stats>
       <a-assets>
-        <video id="rampage" autoplay loop="true" src="rampage.m4v"></video>
         <a-asset-item id="room" src="cineroom.gltf"></a-asset-item>
       </a-assets>
       <a-entity
@@ -34,7 +33,7 @@
         scale="0.2 0.2 0.2"
       ></a-entity>
       <a-video
-        src="#rampage"
+        src="#video"
         width="10"
         height="6"
         position="-0.5 4.5 -7.5"
@@ -44,6 +43,7 @@
     
     
     <video
+      id="video"
       height="200"
       width="200"
       style="position: fixed; bottom: 0; right: 0;"
@@ -72,7 +72,7 @@
 
       const calculatePosition = ({annotations}) => {
         const [x, y, z] = annotations.midwayBetweenEyes[0].map(p => p / 1000)
-        return {x, y, z}
+        return {x, y: -y, z}
       }
 
       const detectFace = async (model, video, emitFace) => {
@@ -95,6 +95,7 @@
 
       async function main() {
         const video = document.querySelector('video')
+        await tf.ready()
         const model = await facemesh.load()
 
         detectFace(model, video, (face) => {

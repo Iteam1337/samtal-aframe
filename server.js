@@ -15,7 +15,7 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/index.html')))
 
 io.on('connection', (client) => {
   client.on('face', (face) => {
-    allFaces[client.id] = face
+    allFaces[client.id + '_' + face.id] = face
   })
 
   setInterval(() => {
@@ -31,6 +31,8 @@ io.on('connection', (client) => {
   }, 50)
 
   client.on('disconnect', (reason) => {
-    delete allFaces[client.id]
+    Object.keys(allFaces).filter(key => key.startsWith(client.id)).forEach(key => {
+      delete allFaces[key]
+    })
   })
 })
