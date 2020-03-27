@@ -21,14 +21,14 @@ io.on('connection', (client) => {
   setInterval(() => {
     if (!Object.keys(allFaces).length) return
 
-    io.emit(
+    io.volatile.emit(
       'faces',
       Object.values(allFaces).reduce(
         (result, faces) => result.concat(faces),
         []
       )
     )
-  }, 1000)
+  }, 50)
 
   client.on('disconnect', (reason) => {
     delete allFaces[client.id]

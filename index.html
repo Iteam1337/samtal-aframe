@@ -15,7 +15,6 @@
         },
         tick: function () {
           const annotations = this.el.getAttribute('annotations')
-          console.log('annotations', annotations)
           this.el.position = annotations.midwayBetweenEyes[0]
           this.el.rotation = annotations.tilt
         },
@@ -24,15 +23,26 @@
   </head>
   <body>
     <a-scene stats>
-      <a-plane
-        position="0 0 -4"
-        rotation="-90 0 0"
-        width="4"
-        height="4"
-        color="#7BC8A4"
-      ></a-plane>
-      <a-sky color="#ececec"></a-sky>
+      <a-assets>
+        <video id="rampage" autoplay loop="true" src="rampage.m4v"></video>
+        <a-asset-item id="room" src="cineroom.gltf"></a-asset-item>
+      </a-assets>
+      <a-entity
+        gltf-model="#room"
+        position="0 0 -2"
+        rotation="0 90 0"
+        scale="0.2 0.2 0.2"
+      ></a-entity>
+      <a-video
+        src="#rampage"
+        width="10"
+        height="6"
+        position="-0.5 4.5 -7.5"
+      ></a-video>
+      <a-sky color="#aabbcc"></a-sky>
     </a-scene>
+    
+    
     <video
       height="200"
       width="200"
@@ -55,37 +65,41 @@
       const calculateTilt = ({ annotations }) => {
         const dX = annotations.rightCheek[0][0] - annotations.leftCheek[0][0]
         const dY = annotations.rightCheek[0][1] - annotations.leftCheek[0][1]
-        const degree = -Math.atan(dY / dX) * 45
+        // const dZ = annotations.rightCheek[0][2] - annotations.leftCheek[0][2]
+        const degree = Math.atan(dY / dX) * 180
         return degree
+      }
+
+      const calculatePosition = ({annotations}) => {
+        const [x, y, z] = annotations.midwayBetweenEyes[0].map(p => p / 1000)
+        return {x, y, z}
       }
 
       const detectFace = async (model, video, emitFace) => {
         const faces = await Promise.race([
           model.estimateFaces(video),
-          timeout(200),
+          timeout(500)
         ])
 
-        if (faces && faces.length) {
-          const face = faces[0]
-
+        faces && faces.forEach((face, i) => {
           const strippedFace = {
-            ...pick(face, ['annotations']),
+            id: i,
+            position: calculatePosition(face),
             tilt: calculateTilt(face),
           }
-
           emitFace(strippedFace)
-        }
+        })
+
+        return detectFace(model, video, emitFace)
       }
 
       async function main() {
         const video = document.querySelector('video')
         const model = await facemesh.load()
 
-        setInterval(() => {
-          detectFace(model, video, (face) => {
-            socket.emit('face', face)
-          })
-        }, 100)
+        detectFace(model, video, (face) => {
+          socket.emit('face', face)
+        })
       }
 
       socket.on('faces', (faces) => {
@@ -98,17 +112,19 @@
 
           if (!faceEl) {
             faceEl = document.createElement('a-box')
-
+            console.log('create')
             faceEl.setAttribute('position', '0 0 -4')
             faceEl.setAttribute('material', 'src: minecraft.png; repeat: 1 1')
             faceEl.setAttribute('a-face')
+            faceEl.setAttribute('scale', '0.8 0.8')
             faceEl.setAttribute('id', `face-${i}`)
 
             scene.appendChild(faceEl)
           }
-
-          faceEl.setAttribute('tilt', face.tilt)
-          faceEl.setAttribute('annotations', JSON.stringify(face.annotations))
+          faceEl.setAttribute('rotation', `0 ${face.tilt} 0`)
+          faceEl.setAttribute('position', face.position)
+          faceEl.object3D.position.y += 1.5
+          faceEl.object3D.position.x += i
         })
       })
 
