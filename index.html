@@ -1,27 +1,15 @@
 <html>
   <head>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://unpkg.com/aframe-state-component@6.7.0/dist/aframe-state-component.min.js"></script> 
+    <script src="https://unpkg.com/aframe-state-component@6.8.0/dist/aframe-state-component.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
+
     <script>
       const socket = io(':8000')
-
-      AFRAME.registerState({
-        initialState: {
-          faces: [
-            {id: 1, tilt: 45, annotations: {midwayBetweenEyes: [[0, 1, -2]]}},
-            {id: 2, tilt: 45, annotations: {midwayBetweenEyes: [[0, 2, -2]]}},
-            {id: 3, tilt: 45, annotations: {midwayBetweenEyes: [[0, 3, -2]]}},
-            {id: 4, tilt: 45, annotations: {midwayBetweenEyes: [[0, 4, -2]]}}
-          ]
-        },
-
-        handlers: {
-          updateFaces: function (state, action) {
-            state.faces = action.faces;
-          }
-        }
-      });
+      const scene = document.querySelector('a-scene')
 
       AFRAME.registerComponent('a-face', {
         init: function () {
@@ -32,12 +20,20 @@
           const annotations = this.el.getAttribute('annotations')
           console.log('annotations', annotations)
           this.el.position = annotations.midwayBetweenEyes[0]
+          this.el.rotation = annotations.tilt
         }
       });
 
-      socket.on('faces', (faces) => {
-        console.log('faces', faces)
-        AFRAME.scenes[0].emit('updateFaces', {faces})
+      socket.on('faces', (newFaces) => {
+        console.log('newFaces', newFaces)
+        if (!AFRAME.scenes.length) return
+        let faceEl = document.getElementById(`face-${face.id}`)
+        if (!faceEl) {
+          faceEl = document.createElement('a-box')
+          scene.appendChild(faceEl)
+        }
+        faceEl.setAttribute('tilt', face.tilt)
+        faceEl.setAttribute('annotations', face.annotations)
       })
     </script>
   </head>
@@ -55,11 +51,7 @@
       ></a-entity>
 
       <a-sky color="#000"></a-sky>
-      <a-entity bind-for="for: face; in: faces; key: id">
-        <template>
-          <a-box a-face bind__tilt="value: face.tilt" bind__annotations="value: face.annotations"></a-box>
-        </template>
-      </a-entity>
+
     </a-scene>
   </body>
 </html>
