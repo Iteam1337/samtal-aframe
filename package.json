@@ -1,0 +1,30 @@
+{
+  "name": "samtal-aframe",
+  "version": "1.0.0",
+  "description": "``` npx serve ```",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx serve",
+    "server": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Iteam1337/samtal-aframe.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Iteam1337/samtal-aframe/issues"
+  },
+  "homepage": "https://github.com/Iteam1337/samtal-aframe#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "livereload": "^0.9.1",
+    "livery": "^2.2.0",
+    "nodemon": "^2.0.2",
+    "serve": "^11.3.0",
+    "socket.io": "^2.3.0",
+    "aframe-state-component": "^6.8.0"
+  }
+}
