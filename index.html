@@ -19,6 +19,8 @@
           this.el.rotation = annotations.tilt
         },
       })
+
+      
     </script>
   </head>
   <body>
@@ -35,13 +37,14 @@
       <a-video
         src="#video"
         width="10"
-        height="6"
+        height="6.6"
         position="-0.5 4.5 -7.5"
       ></a-video>
       <a-sky color="#aabbcc"></a-sky>
-    </a-scene>
+      <a-entity camera="active: true" look-controls wasd-controls position="0.3 1.8 1" ></a-entity>
+  </a-scene>
     
-    
+I
     <video
       id="video"
       height="200"
@@ -50,9 +53,9 @@
       autoPlay
       muted
     ></video>
-
+    <div id="meet"></div>
     <script>
-      const socket = io(':8000')
+      const socket = io()
       const scene = document.querySelector('a-scene')
 
       const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -126,6 +129,7 @@
           faceEl.setAttribute('position', face.position)
           faceEl.object3D.position.y += 1.5
           faceEl.object3D.position.x += i
+          faceEl.object3D.position.z = - 2 
         })
       })
 
@@ -153,6 +157,8 @@
       }
 
       startStream()
+
+
     </script>
   </body>
 </html>
