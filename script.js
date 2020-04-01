@@ -6,7 +6,7 @@ import sceneBackground from './cineroom.gltf'
 const room = document.querySelector('#room')
 room.setAttribute('src', sceneBackground)
 
-const socket = io('localhost:8000')
+let socket = io('localhost:8000')
 const scene = document.querySelector('a-scene')
 
 const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
