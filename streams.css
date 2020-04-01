@@ -1,0 +1,25 @@
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
+video {
+  width: 400px;
+  height: 300px;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}

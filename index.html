@@ -3,7 +3,7 @@
   <head>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-state-component@6.8.0/dist/aframe-state-component.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/tf-backend-wasm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
@@ -29,25 +29,20 @@
   <body>
 
     <body>
-      <img id="stream_img" style="position: absolute; z-index: 10;"></img>
-      <a-scene stats id="a_scene">
+      <a-scene stats>
         <a-assets>
           <a-asset-item id="room" src="./cineroom.gltf"></a-asset-item>
         </a-assets>
         <a-entity gltf-model="#room" position="0 0 -2" rotation="0 90 0" scale="0.2 0.2 0.2"></a-entity>
-        <a-video src="#video" width="10" height="6.6" position="-0.5 4.5 -7.5"></a-video>
-        <a-image width="10" height="6.6" position="-0.5 4.5 -7.5"></a-image>
-
+        <a-video playsinline src="#video" width="10" height="6.6" position="-0.5 4.5 -7.5"></a-video>
         <a-sky color="#aabbcc"></a-sky>
-        <a-entity id="camera_rig">
-          <a-entity id="camera" wasd-controls look-controls camera="active: true;" position="0.3 1.8 1"></a-entity>
+        <a-entity id="rig" position="0.3 1.8 1" wasd-controls look-controls>
+          <a-entity camera="active: true;"></a-entity>
         </a-entity>
+
+
       </a-scene>
 
-
-
-      <video id="video" height="200" width="200" style="position: fixed; bottom: 0; right: 0;" autoplay muted></video>
-      <div id="meet"></div>
 
       <video id="video" height="200" width="200" style="position: fixed; bottom: 0; right: 0;" autoplay muted></video>
       <audio id="surprise" src="/sounds/aha.mp3"></audio>

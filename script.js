@@ -1,4 +1,11 @@
 import 'babel-polyfill' // need this for some reason
+import io from 'socket.io-client'
+import broadcaster from './broadcaster'
+import watcher from './watcher'
+
+const isPresenter = !!localStorage.getItem('isPresenter')
+
+isPresenter ? broadcaster.init() : watcher.init()
 
 import minecraftCube from './minecraft.png'
 import sceneBackground from './cineroom.gltf'
@@ -7,9 +14,7 @@ const room = document.querySelector('#room')
 
 room.setAttribute('src', sceneBackground)
 
-const isPresenter = !!localStorage.getItem('isPresenter')
-
-const camera = document.querySelector('#camera_rig')
+const camera = document.querySelector('#rig')
 const positionCamera = (isPresenter) => {
   if (isPresenter) {
     isPresenter && camera.setAttribute('rotation', '-20 180 0')
@@ -60,26 +65,9 @@ const detectFace = async (model, video, emitFace) => {
   return detectFace(model, video, emitFace)
 }
 
-const FPS = 60
-
-const temp = (video) => {
-  setInterval(() => {
-    socket.emit('video', getFrame(video))
-  }, 10)
-}
-
-const getFrame = () => {
-  const canvas = document.createElement('canvas')
-  canvas.width = video.videoWidth
-  canvas.height = video.videoHeight
-  canvas.getContext('2d').drawImage(video, 0, 0)
-  const data = canvas.toDataURL('image/png')
-  return data
-}
-
 async function main() {
   const video = document.querySelector('video')
-  temp(video)
+
   await tf.ready()
   const model = await facemesh.load()
 
@@ -87,6 +75,7 @@ async function main() {
     socket.emit('face', face)
   })
 }
+
 socket.on('incomingStream', (data) => {
   const img = document.querySelector('#stream_img')
 
@@ -142,4 +131,4 @@ const startStream = async (video) => {
   }
 }
 
-if (isPresenter) startStream()
+startStream()
