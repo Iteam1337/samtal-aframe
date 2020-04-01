@@ -1,7 +1,17 @@
-const socket = io()
+import 'babel-polyfill' // need this for some reason
+
+import minecraftCube from './minecraft.png'
+import sceneBackground from './cineroom.gltf'
+
+const room = document.querySelector('#room')
+room.setAttribute('src', sceneBackground)
+
+const socket = io('localhost:8000')
 const scene = document.querySelector('a-scene')
 
 const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+const isPresenter = true
 
 const pick = (obj, keys) =>
   keys
@@ -61,7 +71,7 @@ socket.on('faces', (faces) => {
       faceEl = document.createElement('a-box')
 
       faceEl.setAttribute('position', '0 0 -4')
-      faceEl.setAttribute('material', 'src: minecraft.png; repeat: 1 1')
+      faceEl.setAttribute('material', `src: ${minecraftCube}; repeat: 1 1`)
       faceEl.setAttribute('a-face')
       faceEl.setAttribute('scale', '0.8 0.8')
       faceEl.setAttribute('id', `face-${i}`)
@@ -99,4 +109,3 @@ const startStream = async (video) => {
 }
 
 startStream()
-

@@ -10,8 +10,8 @@ console.log('listening on port ', port)
 
 const allFaces = {}
 
-app.use(express.static(path.join(__dirname, './')))
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/index.html')))
+// app.use(express.static(path.join(__dirname, './')))
+// app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/index.html')))
 
 io.on('connection', (client) => {
   client.on('face', (face) => {
