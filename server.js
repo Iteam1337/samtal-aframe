@@ -4,9 +4,7 @@ const server = require('http').Server(app)
 const io = require('socket.io')(server)
 const path = require('path')
 const port = process.env.PORT || 8000
-
-server.listen(port)
-console.log('listening on port ', port)
+const wrctRoutes = require('./wrctRoutes')
 
 const allFaces = {}
 
@@ -14,6 +12,7 @@ const allFaces = {}
 // app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/index.html')))
 
 io.on('connection', (client) => {
+  wrctRoutes(client)
   client.on('face', (face) => {
     allFaces[client.id + '_' + face.id] = face
   })
@@ -42,3 +41,6 @@ io.on('connection', (client) => {
       })
   })
 })
+
+server.listen(port)
+console.log('listening on port ', port)

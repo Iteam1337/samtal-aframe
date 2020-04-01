@@ -22,7 +22,7 @@ const positionCamera = (isPresenter) => {
   }
 }
 
-positionCamera(isPresenter)
+// positionCamera(isPresenter)
 
 const socket = io('localhost:8000')
 const scene = document.querySelector('a-scene')
@@ -75,12 +75,6 @@ async function main() {
     socket.emit('face', face)
   })
 }
-
-socket.on('incomingStream', (data) => {
-  const img = document.querySelector('#stream_img')
-
-  img.src = data
-})
 
 socket.on('faces', (faces) => {
   if (!AFRAME.scenes.length) {
