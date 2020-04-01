@@ -4,14 +4,25 @@ import minecraftCube from './minecraft.png'
 import sceneBackground from './cineroom.gltf'
 
 const room = document.querySelector('#room')
+
 room.setAttribute('src', sceneBackground)
+
+const isPresenter = !!localStorage.getItem('isPresenter')
+
+const camera = document.querySelector('#camera_rig')
+const positionCamera = (isPresenter) => {
+  if (isPresenter) {
+    isPresenter && camera.setAttribute('rotation', '-20 180 0')
+    camera.setAttribute('position', '-1 3 -6')
+  }
+}
+
+positionCamera(isPresenter)
 
 const socket = io('localhost:8000')
 const scene = document.querySelector('a-scene')
 
 const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-
-const isPresenter = true
 
 const pick = (obj, keys) =>
   keys
@@ -49,8 +60,26 @@ const detectFace = async (model, video, emitFace) => {
   return detectFace(model, video, emitFace)
 }
 
+const FPS = 60
+
+const temp = (video) => {
+  setInterval(() => {
+    socket.emit('video', getFrame(video))
+  }, 10)
+}
+
+const getFrame = () => {
+  const canvas = document.createElement('canvas')
+  canvas.width = video.videoWidth
+  canvas.height = video.videoHeight
+  canvas.getContext('2d').drawImage(video, 0, 0)
+  const data = canvas.toDataURL('image/png')
+  return data
+}
+
 async function main() {
   const video = document.querySelector('video')
+  temp(video)
   await tf.ready()
   const model = await facemesh.load()
 
@@ -58,6 +87,11 @@ async function main() {
     socket.emit('face', face)
   })
 }
+socket.on('incomingStream', (data) => {
+  const img = document.querySelector('#stream_img')
+
+  img.src = data
+})
 
 socket.on('faces', (faces) => {
   if (!AFRAME.scenes.length) {
@@ -108,4 +142,4 @@ const startStream = async (video) => {
   }
 }
 
-startStream()
+if (isPresenter) startStream()

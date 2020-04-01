@@ -30,6 +30,10 @@ io.on('connection', (client) => {
     )
   }, 50)
 
+  client.on('video', (data) => {
+    client.broadcast.emit('incomingStream', data)
+  })
+
   client.on('disconnect', (reason) => {
     Object.keys(allFaces)
       .filter((key) => key.startsWith(client.id))
