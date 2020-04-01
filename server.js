@@ -31,8 +31,10 @@ io.on('connection', (client) => {
   }, 50)
 
   client.on('disconnect', (reason) => {
-    Object.keys(allFaces).filter(key => key.startsWith(client.id)).forEach(key => {
-      delete allFaces[key]
-    })
+    Object.keys(allFaces)
+      .filter((key) => key.startsWith(client.id))
+      .forEach((key) => {
+        delete allFaces[key]
+      })
   })
 })
