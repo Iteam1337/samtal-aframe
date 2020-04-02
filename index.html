@@ -10,6 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
     <script src="https://unpkg.com/aframe-orbit-controls@1.2.0/dist/aframe-orbit-controls.min.js"></script>
     <script src="https://unpkg.com/aframe-supercraft-loader@1.1.3/dist/aframe-supercraft-loader.js"></script>
+    <script src="https://unpkg.com/aframe-template-component@^3.1.1/dist/aframe-template-component.min.js"></script>
+
     <script>
       AFRAME.registerComponent('a-face', {
         init: function () {
@@ -29,6 +31,16 @@
     <a-scene stats>
       <a-assets>
         <a-asset-item id="room" src="./cineroom.gltf"></a-asset-item>
+        <script id="face" type="html">
+          <a-entity>
+            <a-sphere scale="0.1 0.1 0.1" color="#ff0" position="${position}"
+            rotation="${rotation}"></a-sphere>
+            <a-sphere scale="0.05 0.05 0.05" color="#000"
+            position="${lefteyeposition}"></a-sphere>
+            <a-sphere scale="0.05 0.05 0.05" color="#000"
+            position="${righteyeposition}"></a-sphere>
+          </a-entity>
+        </script>
       </a-assets>
       <a-entity
         gltf-model="#room"

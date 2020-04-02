@@ -97,6 +97,7 @@ socket.on('faces', (faces) => {
     let leftEye = document.getElementById(`face-${i}-leftEye`)
     let rightEye = document.getElementById(`face-${i}-rightEye`)
     let mouth = document.getElementById(`face-${i}-mouth`)
+    let test = document.getElementById(`face-${i}-test`)
 
     if (!faceEl) {
       faceEl = document.createElement('a-sphere')
@@ -122,13 +123,23 @@ socket.on('faces', (faces) => {
       mouth.setAttribute('scale', '0.25 0.25')
       mouth.setAttribute('id', `face-${i}-mouth`)
       faceEl.appendChild(mouth)
+
+      test = document.createElement('a-entity')
+      test.setAttribute('template', 'src: #face')
+      test.setAttribute('id', `face-${i}-test`)
+      scene.appendChild(test)
     }
 
-    faceEl.setAttribute('rotation', `0 ${face.tilt} 0`)
-    rightEye.setAttribute('position', face.rightEye)
-    leftEye.setAttribute('position', face.leftEye)
+    //faceEl.setAttribute('rotation', `0 ${face.tilt} 0`)
+    //rightEye.setAttribute('position', face.rightEye)
+    //leftEye.setAttribute('position', face.leftEye)
     mouth.setAttribute('position', face.mouth.position)
-    faceEl.setAttribute('position', face.position)
+    //faceEl.setAttribute('position', face.position)
+    test.setAttribute('data-position',face.position)
+    test.setAttribute('data-lefteyeposition', face.leftEye)
+    test.setAttribute('data-righteyeposition', face.rightEye)
+    test.setAttribute('data-rotation', `0 ${face.tilt} 0`)
+
     faceEl.object3D.position.y += 1.5
     faceEl.object3D.position.x += i
     faceEl.object3D.position.z = -2
