@@ -2,12 +2,13 @@ export const createFace = (scene) => (
   { position, leftEyebrow, tilt, mouth },
   i
 ) => {
-  let faceEl = document.getElementById(`face-${i}`)
+  const id = `face-${i}`
+  let faceEl = document.getElementById(id)
 
   if (!faceEl) {
     faceEl = document.createElement('a-entity')
     faceEl.setAttribute('template', 'src: #face')
-    faceEl.setAttribute('id', `face-${i}`)
+    faceEl.setAttribute('id', id)
     scene.appendChild(faceEl)
   }
 
@@ -34,7 +35,7 @@ export const createFace = (scene) => (
 
   faceEl.object3D.rotation.set(
     THREE.Math.degToRad(0),
-    THREE.Math.degToRad(tilt),
+    THREE.Math.degToRad(parseFloat(tilt.toFixed(2))),
     THREE.Math.degToRad(0)
   )
 }
