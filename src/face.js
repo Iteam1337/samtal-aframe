@@ -12,7 +12,7 @@ export const createFace = (scene) => ({ position, tilt, mouth }, i) => {
 
   if (mouthEl) {
     mouthEl.object3D.scale.x = mouth.width * 10
-    mouthEl.object3D.scale.y = mouth.height * 10
+    mouthEl.object3D.scale.y = mouth.height * 5
   }
 
   faceEl.object3D.position.x = i
