@@ -1,0 +1,1 @@
+<a-entity geometry="primitive: sphere" material="color: ${color}" position="${position}" scale="0.5 0.5 0.5"></a-entity>

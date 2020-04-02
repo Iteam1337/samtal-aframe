@@ -27,11 +27,23 @@ const calculateTilt = ({ annotations }) => {
   return degree
 }
 
-const calculatePosition = ({ annotations }) => {
-  const [x, y, z] = annotations.midwayBetweenEyes[0].map((p) => p / 1000)
+const getPositions = (annotation) => {
+  const [x, y, z] = annotation.map((p) => p / 1000)
 
   return { x, y: -y, z }
 }
+
+const midpoint = (pointA, pointB) => ({
+  x: (pointA.x + pointB.x) / 2,
+  y: (pointA.y + pointB.y) / 2,
+  z: (pointA.z + pointB.z) / 2,
+})
+
+const diff = (pointA, pointB) => ({
+  x: pointA.x - pointB.x,
+  y: pointA.y - pointB.y,
+  z: pointA.z - pointB.z,
+})
 
 const detectFace = async (model, video, emitFace) => {
   const faces = await Promise.race([model.estimateFaces(video), timeout(500)])
@@ -40,8 +52,24 @@ const detectFace = async (model, video, emitFace) => {
     faces.forEach((face, i) => {
       const strippedFace = {
         id: i,
-        position: calculatePosition(face),
+        position: getPositions(face.annotations.midwayBetweenEyes[0]),
         tilt: calculateTilt(face),
+        leftEye: getPositions(face.annotations.leftEyeUpper0[3]),
+        rightEye: getPositions(face.annotations.rightEyeUpper0[3]),
+        mouth: {
+          position: midpoint(
+            getPositions(face.annotations.lipsUpperOuter[5]),
+            getPositions(face.annotations.lipsLowerOuter[5])
+          ),
+          height: diff(
+            getPositions(face.annotations.lipsUpperOuter[4]),
+            getPositions(face.annotations.lipsLowerOuter[4])
+          ).y,
+          width: diff(
+            getPositions(face.annotations.lipsLowerOuter[0]),
+            getPositions(face.annotations.lipsLowerOuter[0])
+          ).x,
+        },
       }
       emitFace(strippedFace)
     })
@@ -66,20 +94,40 @@ socket.on('faces', (faces) => {
 
   faces.forEach((face, i) => {
     let faceEl = document.getElementById(`face-${i}`)
+    let leftEye = document.getElementById(`face-${i}-leftEye`)
+    let rightEye = document.getElementById(`face-${i}-rightEye`)
+    let mouth = document.getElementById(`face-${i}-mouth`)
 
     if (!faceEl) {
-      faceEl = document.createElement('a-box')
+      faceEl = document.createElement('a-sphere')
 
       faceEl.setAttribute('position', '0 0 -4')
-      faceEl.setAttribute('material', `src: ${minecraftCube}; repeat: 1 1`)
+      faceEl.setAttribute('material', `color: #ff0`)
       faceEl.setAttribute('a-face')
-      faceEl.setAttribute('scale', '0.8 0.8')
+      faceEl.setAttribute('scale', '0.1 0.1 0.1')
       faceEl.setAttribute('id', `face-${i}`)
-
       scene.appendChild(faceEl)
+
+      leftEye = document.createElement('a-sphere')
+      leftEye.setAttribute('scale', '0.25 0.25')
+      leftEye.setAttribute('id', `face-${i}-leftEye`)
+      faceEl.appendChild(leftEye)
+
+      rightEye = document.createElement('a-sphere')
+      rightEye.setAttribute('scale', '0.25 0.25')
+      rightEye.setAttribute('id', `face-${i}-rightEye`)
+      faceEl.appendChild(rightEye)
+
+      mouth = document.createElement('a-sphere')
+      mouth.setAttribute('scale', '0.25 0.25')
+      mouth.setAttribute('id', `face-${i}-mouth`)
+      faceEl.appendChild(mouth)
     }
 
     faceEl.setAttribute('rotation', `0 ${face.tilt} 0`)
+    rightEye.setAttribute('position', face.rightEye)
+    leftEye.setAttribute('position', face.leftEye)
+    mouth.setAttribute('position', face.mouth.position)
     faceEl.setAttribute('position', face.position)
     faceEl.object3D.position.y += 1.5
     faceEl.object3D.position.x += i
