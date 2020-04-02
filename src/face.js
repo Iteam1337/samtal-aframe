@@ -1,5 +1,5 @@
 export const createFace = (scene) => (
-  { position, leftEyebrow, tilt, mouth },
+  { position, leftEyebrow, rightEyebrow, tilt, mouth },
   i
 ) => {
   const id = `face-${i}`
@@ -23,9 +23,19 @@ export const createFace = (scene) => (
 
   if (leftEyebrowEl) {
     leftEyebrowEl.object3D.rotation.set(
-      THREE.Math.degToRad(leftEyebrow.x),
-      THREE.Math.degToRad(leftEyebrow.y),
-      THREE.Math.degToRad(leftEyebrow.z)
+      THREE.Math.degToRad(0),
+      THREE.Math.degToRad(0),
+      THREE.Math.degToRad(leftEyebrow.tilt)
+    )
+  }
+
+  const rightEyebrowEl = faceEl.getElementsByClassName('rightEyebrow')[0]
+
+  if (rightEyebrowEl) {
+    rightEyebrowEl.object3D.rotation.set(
+      THREE.Math.degToRad(0),
+      THREE.Math.degToRad(0),
+      THREE.Math.degToRad(rightEyebrow.tilt)
     )
   }
 

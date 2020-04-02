@@ -6,6 +6,7 @@ import { createFace } from './face'
 import {
   pick,
   calculateTilt,
+  calculateEyebrowTilt,
   getPositions,
   midpoint,
   diff,
@@ -33,8 +34,14 @@ const detectFace = async (model, video, emitFace) => {
         tilt: calculateTilt(face),
         leftEye: getPositions(annotations.leftEyeUpper0[3]),
         rightEye: getPositions(annotations.rightEyeUpper0[3]),
-        leftEyebrow: getPositions(annotations.leftEyebrowLower[4]),
-        rightEyebrow: getPositions(annotations.rightEyebrowLower[4]),
+        leftEyebrow: {
+          tilt: calculateEyebrowTilt(annotations.leftEyebrowUpper),
+          position: getPositions(annotations.leftEyebrowLower[4]),
+        },
+        rightEyebrow: {
+          tilt: calculateEyebrowTilt(annotations.rightEyebrowUpper),
+          position: getPositions(annotations.rightEyebrowLower[4]),
+        },
         mouth: {
           position: midpoint(
             getPositions(annotations.lipsUpperOuter[5]),

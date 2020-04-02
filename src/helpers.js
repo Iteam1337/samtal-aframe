@@ -14,6 +14,14 @@ export const calculateTilt = ({ annotations }) => {
   return degree
 }
 
+export const calculateEyebrowTilt = (eyebrow) => {
+  const dX = eyebrow[7][0] - eyebrow[0][0]
+  const dY = eyebrow[7][1] - eyebrow[0][1]
+  const degree = Math.atan(dY / dX) * 180
+
+  return degree
+}
+
 export const getPositions = (annotation) => {
   const [x, y, z] = annotation.map((p) => p / 1000)
 
