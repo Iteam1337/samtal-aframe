@@ -34,11 +34,14 @@
         <script id="face" type="html">
           <a-entity>
             <a-sphere scale="0.1 0.1 0.1" color="#ff0" position="${position}"
-            rotation="${rotation}"></a-sphere>
-            <a-sphere scale="0.05 0.05 0.05" color="#000"
-            position="${lefteyeposition}"></a-sphere>
-            <a-sphere scale="0.05 0.05 0.05" color="#000"
-            position="${righteyeposition}"></a-sphere>
+            rotation="${rotation}">
+            <a-sphere scale="0.1 0.1 0.1" position="-0.25 0 -1" color="#fff"
+            ></a-sphere>
+            <a-sphere scale="0.1 0.1 0.1" color="#fff"
+            position="0.25 0 -1"></a-sphere>
+            <a-sphere scale="0.3 0.3 0.3" color="#000"
+            position="0 -0.5 -1"></a-sphere>
+</a-sphere>
           </a-entity>
         </script>
       </a-assets>
