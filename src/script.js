@@ -2,6 +2,7 @@ import 'babel-polyfill' // need this for some reason
 
 import minecraftCube from '../assets/minecraft.png'
 import sceneBackground from '../assets/cineroom.gltf'
+import { createFace } from './face'
 import { pick, calculateTilt, getPositions, midpoint, diff } from './helpers.js'
 
 const room = document.querySelector('#room')
@@ -61,27 +62,7 @@ socket.on('faces', (faces) => {
     return
   }
 
-  faces.forEach(({ position, rightEye, leftEye, tilt }, i) => {
-    let faceEl = document.getElementById(`face-${i}`)
-
-    if (!faceEl) {
-      faceEl = document.createElement('a-entity')
-      faceEl.setAttribute('template', 'src: #face')
-      faceEl.setAttribute('id', `face-${i}`)
-      faceEl.setAttribute('data-position', `${i} 1 -2`)
-      scene.appendChild(faceEl)
-    }
-
-    faceEl.setAttribute(
-      'data-lefteyeposition',
-      `${leftEye.x} ${leftEye.y} ${leftEye.z}`
-    )
-    faceEl.setAttribute(
-      'data-righteyeposition',
-      `${rightEye.x} ${rightEye.y} ${rightEye.z}`
-    )
-    faceEl.setAttribute('data-rotation', `0 ${tilt} 0`)
-  })
+  faces.forEach(createFace(scene))
 })
 
 const startStream = async (video) => {
