@@ -1,7 +1,8 @@
 import 'babel-polyfill' // need this for some reason
 
-import minecraftCube from './minecraft.png'
-import sceneBackground from './cineroom.gltf'
+import minecraftCube from '../assets/minecraft.png'
+import sceneBackground from '../assets/cineroom.gltf'
+import { pick, calculateTilt, getPositions, midpoint, diff } from './helpers.js'
 
 const room = document.querySelector('#room')
 room.setAttribute('src', sceneBackground)
@@ -12,38 +13,6 @@ const scene = document.querySelector('a-scene')
 const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const isPresenter = true
-
-const pick = (obj, keys) =>
-  keys
-    .map((k) => (k in obj ? { [k]: obj[k] } : {}))
-    .reduce((res, o) => Object.assign(res, o), {})
-
-const calculateTilt = ({ annotations }) => {
-  const dX = annotations.rightCheek[0][0] - annotations.leftCheek[0][0]
-  const dY = annotations.rightCheek[0][1] - annotations.leftCheek[0][1]
-  // const dZ = annotations.rightCheek[0][2] - annotations.leftCheek[0][2]
-  const degree = Math.atan(dY / dX) * 180
-
-  return degree
-}
-
-const getPositions = (annotation) => {
-  const [x, y, z] = annotation.map((p) => p / 1000)
-
-  return { x, y: -y, z }
-}
-
-const midpoint = (pointA, pointB) => ({
-  x: (pointA.x + pointB.x) / 2,
-  y: (pointA.y + pointB.y) / 2,
-  z: (pointA.z + pointB.z) / 2,
-})
-
-const diff = (pointA, pointB) => ({
-  x: pointA.x - pointB.x,
-  y: pointA.y - pointB.y,
-  z: pointA.z - pointB.z,
-})
 
 const detectFace = async (model, video, emitFace) => {
   const faces = await Promise.race([model.estimateFaces(video), timeout(500)])
