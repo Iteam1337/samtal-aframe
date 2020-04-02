@@ -15,6 +15,16 @@ export const createFace = (scene) => ({ position, tilt, mouth }, i) => {
     mouthEl.object3D.scale.y = mouth.height * 10
   }
 
+  const leftEyebrowEl = faceEl.getElementsByClassName('leftEyebrow')[0]
+
+  if (leftEyebrowEl) {
+    leftEyebrowEl.object3D.rotation.set(
+      THREE.Math.degToRad(leftEyebrow.x),
+      THREE.Math.degToRad(tiltleftEyebrow.y),
+      THREE.Math.degToRad(leftEyebrow.z)
+    )
+  }
+
   faceEl.object3D.position.x = i
   faceEl.object3D.position.y = 1.5
   faceEl.object3D.position.z = -3
