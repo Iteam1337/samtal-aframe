@@ -3,16 +3,21 @@ import 'babel-polyfill' // need this for some reason
 import minecraftCube from '../assets/minecraft.png'
 import sceneBackground from '../assets/cineroom.gltf'
 import { createFace } from './face'
-import { pick, calculateTilt, getPositions, midpoint, diff } from './helpers.js'
+import {
+  pick,
+  calculateTilt,
+  getPositions,
+  midpoint,
+  diff,
+  timeout,
+} from './helpers.js'
 
 const room = document.querySelector('#room')
-room.setAttribute('src', sceneBackground)
-
-let socket = io('localhost:8000')
 const scene = document.querySelector('a-scene')
 
-const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+room.setAttribute('src', sceneBackground)
 
+const socket = io('localhost:8000')
 const isPresenter = true
 
 const detectFace = async (model, video, emitFace) => {
@@ -20,24 +25,26 @@ const detectFace = async (model, video, emitFace) => {
 
   faces &&
     faces.forEach((face, i) => {
+      const { annotations } = face
+
       const strippedFace = {
         id: i,
-        position: getPositions(face.annotations.midwayBetweenEyes[0]),
+        position: getPositions(annotations.midwayBetweenEyes[0]),
         tilt: calculateTilt(face),
-        leftEye: getPositions(face.annotations.leftEyeUpper0[3]),
-        rightEye: getPositions(face.annotations.rightEyeUpper0[3]),
+        leftEye: getPositions(annotations.leftEyeUpper0[3]),
+        rightEye: getPositions(annotations.rightEyeUpper0[3]),
         mouth: {
           position: midpoint(
-            getPositions(face.annotations.lipsUpperOuter[5]),
-            getPositions(face.annotations.lipsLowerOuter[5])
+            getPositions(annotations.lipsUpperOuter[5]),
+            getPositions(annotations.lipsLowerOuter[5])
           ),
           height: diff(
-            getPositions(face.annotations.lipsUpperOuter[4]),
-            getPositions(face.annotations.lipsLowerOuter[4])
+            getPositions(annotations.lipsUpperOuter[4]),
+            getPositions(annotations.lipsLowerOuter[4])
           ).y,
           width: diff(
-            getPositions(face.annotations.lipsLowerOuter[0]),
-            getPositions(face.annotations.lipsLowerOuter[0])
+            getPositions(annotations.lipsLowerOuter[0]),
+            getPositions(annotations.lipsLowerOuter[0])
           ).x,
         },
       }

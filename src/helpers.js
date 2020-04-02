@@ -1,3 +1,5 @@
+const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 export const pick = (obj, keys) =>
   keys
     .map((k) => (k in obj ? { [k]: obj[k] } : {}))

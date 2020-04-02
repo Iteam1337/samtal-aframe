@@ -8,8 +8,6 @@ export const createFace = (scene) => ({ position, tilt }, i) => {
     scene.appendChild(faceEl)
   }
 
-  //faceEl.setAttribute('data-rotation', `0 ${tilt} 0`)
-
   faceEl.object3D.position.x = i
   faceEl.object3D.position.y = 1
   faceEl.object3D.position.z = -2
@@ -19,5 +17,4 @@ export const createFace = (scene) => ({ position, tilt }, i) => {
     THREE.Math.degToRad(tilt),
     THREE.Math.degToRad(0)
   )
-  faceEl.object3D.rotation.x += Math.PI
 }
