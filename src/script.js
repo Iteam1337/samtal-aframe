@@ -43,11 +43,12 @@ const detectFace = async (model, video, emitFace) => {
             getPositions(annotations.lipsLowerOuter[4])
           ).y,
           width: diff(
-            getPositions(annotations.lipsLowerOuter[0]),
+            getPositions(annotations.lipsUpperOuter[0]),
             getPositions(annotations.lipsLowerOuter[0])
           ).x,
         },
       }
+
       emitFace(strippedFace)
     })
 
