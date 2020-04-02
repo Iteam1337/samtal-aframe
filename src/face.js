@@ -1,4 +1,4 @@
-export const createFace = (scene) => ({ position, tilt }, i) => {
+export const createFace = (scene) => ({ position, tilt, mouth }, i) => {
   let faceEl = document.getElementById(`face-${i}`)
 
   if (!faceEl) {
@@ -8,9 +8,16 @@ export const createFace = (scene) => ({ position, tilt }, i) => {
     scene.appendChild(faceEl)
   }
 
+  const mouthEl = faceEl.getElementsByClassName('mouth')[0]
+
+  if (mouthEl) {
+    mouthEl.object3D.scale.x = mouth.width * 10
+    mouthEl.object3D.scale.y = mouth.height * 10
+  }
+
   faceEl.object3D.position.x = i
-  faceEl.object3D.position.y = 1
-  faceEl.object3D.position.z = -2
+  faceEl.object3D.position.y = 1.5
+  faceEl.object3D.position.z = -3
 
   faceEl.object3D.rotation.set(
     THREE.Math.degToRad(0),

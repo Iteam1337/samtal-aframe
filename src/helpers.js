@@ -17,7 +17,7 @@ export const calculateTilt = ({ annotations }) => {
 export const getPositions = (annotation) => {
   const [x, y, z] = annotation.map((p) => p / 1000)
 
-  return { x, y: -y, z }
+  return { x: -x, y: -y, z }
 }
 
 export const midpoint = (pointA, pointB) => ({
