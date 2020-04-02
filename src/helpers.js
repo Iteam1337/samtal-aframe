@@ -6,20 +6,18 @@ export const pick = (obj, keys) =>
     .reduce((res, o) => Object.assign(res, o), {})
 
 export const calculateTilt = ({ annotations }) => {
-  const dX = annotations.rightCheek[0][0] - annotations.leftCheek[0][0]
-  const dY = annotations.rightCheek[0][1] - annotations.leftCheek[0][1]
-  // const dZ = annotations.rightCheek[0][2] - annotations.leftCheek[0][2]
-  const degree = Math.atan(dY / dX) * 180
+  const { leftCheek, rightCheek } = annotations
+  const dX = rightCheek[0][0] - leftCheek[0][0]
+  const dY = rightCheek[0][1] - leftCheek[0][1]
 
-  return degree
+  return Math.atan(dY / dX) * 180
 }
 
 export const calculateEyebrowTilt = (eyebrow) => {
   const dX = eyebrow[7][0] - eyebrow[0][0]
   const dY = eyebrow[7][1] - eyebrow[0][1]
-  const degree = Math.atan(dY / dX) * 180
 
-  return degree
+  return Math.atan(dY / dX) * 180
 }
 
 export const getPositions = (annotation) => {
