@@ -1,7 +1,6 @@
 const audio = document.getElementById('happy')
-const socket = io('localhost:8000')
-
 let soundReady = false
+const socket = io()
 
 audio.addEventListener('canplay', () => {
   soundReady = true

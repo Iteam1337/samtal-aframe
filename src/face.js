@@ -39,9 +39,9 @@ export const createFace = (scene) => (
     )
   }
 
-  faceEl.object3D.position.x = i
-  faceEl.object3D.position.y = 1.5
-  faceEl.object3D.position.z = -3
+  faceEl.object3D.position.x = -i * 0.8
+  faceEl.object3D.position.y = 1.3
+  faceEl.object3D.position.z = -0.8
 
   faceEl.object3D.rotation.set(
     THREE.Math.degToRad(0),

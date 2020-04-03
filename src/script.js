@@ -18,7 +18,7 @@ const scene = document.querySelector('a-scene')
 
 room.setAttribute('src', sceneBackground)
 
-const socket = io('localhost:8000')
+const socket = io()
 const isPresenter = true
 
 const detectFace = async (model, video, emitFace) => {

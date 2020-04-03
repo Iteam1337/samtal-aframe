@@ -4,15 +4,18 @@ const server = require('http').Server(app)
 const io = require('socket.io')(server)
 const path = require('path')
 const port = process.env.PORT || 8000
+const Bundler = require('parcel-bundler')
 
 server.listen(port)
 console.log('listening on port ', port)
 
+const bundler = new Bundler('index.html', {hmr: false})
+
+app.use(bundler.middleware())
+app.use(express.static(path.join(__dirname, './dist')))
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/dist/index.html')))
+
 const allFaces = {}
-
-// app.use(express.static(path.join(__dirname, './')))
-// app.get('/', (req, res) => res.sendFile(path.join(__dirname, '/index.html')))
-
 io.on('connection', (client) => {
   client.on('face', (face) => {
     allFaces[client.id + '_' + face.id] = face
