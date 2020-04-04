@@ -38,7 +38,7 @@ const detectFace = async (model, video, emitFace) => {
       const { annotations } = face
       const center = getPositions(annotations.midwayBetweenEyes[0])
       averageCenters[i] = (averageCenters[i] ?? []).concat([center])
-      const avgCenter = xyzAvg(averageCenters[i].slice(-100))
+      const avgCenter = xyzAvg(averageCenters[i].slice(-200))
       const baseTilt = calculateTilt(face)
 
       const strippedFace = {
