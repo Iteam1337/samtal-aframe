@@ -20,6 +20,14 @@ export const calculateEyebrowTilt = (eyebrow) => {
   return Math.atan(dY / dX) * 180
 }
 
+export const calculateExpressions = ({mouth, leftEyebrow, rightEyebrow}) => {
+
+  return {
+    smile: (mouth.width * 4) / (mouth.height)
+  }
+
+}
+
 export const getPositions = (annotation) => {
   const [x, y, z] = annotation.map((p) => p / 1000)
 

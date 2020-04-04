@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mariadb
+  name: samtal-ghost-mariadb
+  namespace: default
+spec:
+  ports:
+  - name: mysql
+    port: 3306
+    protocol: TCP
+    targetPort: mysql
+  selector:
+    app: mariadb
+    component: master
+    release: samtal-ghost
+  sessionAffinity: None
+  type: ClusterIP

@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    control-plane.alpha.kubernetes.io/leader: '{"holderIdentity":"d98e2104-746b-11ea-96f7-aed5d9000e54","leaseDurationSeconds":15,"acquireTime":"2020-04-04T05:43:16Z","renewTime":"2020-04-04T05:43:18Z","leaderTransitions":0}'
+    pv.kubernetes.io/bind-completed: "yes"
+    pv.kubernetes.io/bound-by-controller: "yes"
+    volume.beta.kubernetes.io/storage-provisioner: microk8s.io/hostpath
+  creationTimestamp: "2020-04-04T05:43:16Z"
+  finalizers:
+  - kubernetes.io/pvc-protection
+  labels:
+    app: samtal-ghost
+    chart: ghost-9.1.16
+    heritage: Helm
+    release: samtal-ghost
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:labels:
+          .: {}
+          f:app: {}
+          f:chart: {}
+          f:heritage: {}
+          f:release: {}
+      f:spec:
+        f:accessModes: {}
+        f:resources:
+          f:requests:
+            .: {}
+            f:storage: {}
+        f:volumeMode: {}
+    manager: Go-http-client
+    operation: Update
+    time: "2020-04-04T05:43:16Z"
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:pv.kubernetes.io/bind-completed: {}
+          f:pv.kubernetes.io/bound-by-controller: {}
+          f:volume.beta.kubernetes.io/storage-provisioner: {}
+      f:spec:
+        f:volumeName: {}
+      f:status:
+        f:accessModes: {}
+        f:capacity:
+          .: {}
+          f:storage: {}
+        f:phase: {}
+    manager: kube-controller-manager
+    operation: Update
+    time: "2020-04-04T05:43:16Z"
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:control-plane.alpha.kubernetes.io/leader: {}
+    manager: hostpath-provisioner
+    operation: Update
+    time: "2020-04-04T05:43:18Z"
+  name: samtal-ghost
+  namespace: default
+  resourceVersion: "10430662"
+  selfLink: /api/v1/namespaces/default/persistentvolumeclaims/samtal-ghost
+  uid: f680fa74-5dc5-4599-a728-21f47c16fcc6
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+  storageClassName: microk8s-hostpath
+  volumeMode: Filesystem
+  volumeName: pvc-f680fa74-5dc5-4599-a728-21f47c16fcc6
+status:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  phase: Bound

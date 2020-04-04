@@ -13,7 +13,7 @@
   </head>
   <body>
   <body>
-    <a-scene stats>
+    <a-scene stats arjs=’sourceType: webcam;’>
       <a-assets>
         <a-asset-item id="room" src="./cineroom.gltf"></a-asset-item>
         <script id="face" type="html">
@@ -28,17 +28,12 @@
             <a-sphere scale="0.1 0.1 0.1" position="-0.25 0.2 -0.89" color="#fff">
               <a-sphere scale="0.4 0.4 0.4" position="0 0 -0.8" color="#333"></a-sphere>
             </a-sphere>
-            <a-box
-              class="rightEyebrow"
-              height="0.10"
-              width="0.35"
-              position="0.25 0.5 -0.48"
-              color="#000"
-            ></a-box>
+            <a-entity class="rightEyebrow" line="start: 0, 1, 0; end: 2 0 -5; color: black"></a-entity>
+            
             <a-sphere scale="0.1 0.1 0.1" color="#fff" position="0.25 0.2 -0.89">
               <a-sphere scale="0.4 0.4 0.4" position="0 0 -0.8" color="#333"></a-sphere>
             </a-sphere>
-            <a-sphere
+            <a-sphere mouth
               class="mouth"
               scale="0.75 0.25 0.25"
               color="#000"
