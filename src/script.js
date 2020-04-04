@@ -111,10 +111,12 @@ const startStream = async (video) => {
 }
 
 setTimeout(() => {
-  if (confirm('Vill du dela dina ansiktsuttryck med detta rummet?\r\n (Tar några sekunder att ladda in...)')) {
-    startStream()
-  }
+  //if (confirm('Vill du dela dina ansiktsuttryck med detta rummet?\r\n (Tar några sekunder att ladda in...)')) {
+  // startStream()
+  // }
 }, 500)
 
-// const camera1 = document.querySelector('#first-camera');
-// camera1.object3D.position.x = 2;
+const camera1 = document.querySelector('#first-camera');
+const camerarig1 = document.querySelector('#first-camera-rig');
+camerarig1.object3D.lookAt(0, 1, -6);
+camerarig1.object3D.position.set(-2, 1.5, -6);

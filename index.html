@@ -14,6 +14,10 @@
   <body>
   <body>
     <a-scene stats arjs=’sourceType: webcam;’>
+      <a-entity id="first-camera-rig">
+        <a-entity id="first-camera" camera look-controls camera="fov: 50" wasd-controls></a-entity>
+      </a-entity>
+
       <a-assets>
         <a-asset-item id="room" src="./cineroom.gltf"></a-asset-item>
         <a-asset-item id="logo" src="./logo.png"></a-asset-item>
