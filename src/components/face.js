@@ -48,8 +48,8 @@ AFRAME.registerComponent('face', {
 
     if (mouthEl) {
       mouthEl.position = this.data.mouth.position
-      mouthEl.object3D.scale.x = this.data.mouth.width * 10
-      mouthEl.object3D.scale.y = this.data.mouth.height * 5
+      mouthEl.object3D.scale.x = this.data.mouth.width * 0.8
+      mouthEl.object3D.scale.y = this.data.mouth.height * 0.4
     }
 
     const leftEyebrowEl = this.el.getElementsByClassName('leftEyebrow')[0]
@@ -76,11 +76,10 @@ AFRAME.registerComponent('face', {
     }
 
     this.el.color = `rgba(255, 255, 255)`
-
     if (headEl) {
-      headEl.object3D.position.x = this.data.position.x;
-      headEl.object3D.position.y = this.data.position.y;
-      headEl.object3D.position.z = this.data.position.z - 1.5;
+      headEl.object3D.position.x = this.data.position.x * 0.1;
+      headEl.object3D.position.y = this.data.position.y * 0.1 +  0.6;
+      headEl.object3D.position.z = this.data.position.z * 0.1
       headEl.object3D.rotation.set(
         THREE.Math.degToRad(0),
         THREE.Math.degToRad(parseFloat(this.data.tilt.toFixed(2))),
