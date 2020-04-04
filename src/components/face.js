@@ -5,6 +5,9 @@ AFRAME.registerComponent('face', {
     tilt: {type: 'number'},
     leftEye: {type: 'vec3'},
     rightEye: {type: 'vec3'},
+    expressions: {
+      happy: {type: 'number'}
+    },
     leftEyebrow: {
       tilt: {type: 'number'},
       position: {type: 'vec3'},
@@ -24,6 +27,7 @@ AFRAME.registerComponent('face', {
     // Do something when component first attached.
 
     console.log('init face', this.data)
+    this.el.originalPosition = this.data.position
 
     this.lastmodel = '';
 
@@ -43,8 +47,6 @@ AFRAME.registerComponent('face', {
     
     const headEl = this.el.getElementsByClassName('thehead')[0]
     const mouthEl = this.el.getElementsByClassName('mouth')[0]
-
-    console.log('head', headEl)
 
     if (mouthEl) {
       mouthEl.position = this.data.mouth.position

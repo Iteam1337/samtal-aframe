@@ -21,20 +21,29 @@ room.setAttribute('src', sceneBackground)
 
 const socket = io()
 const isPresenter = true
+const averageCenters = {}
+
+const xyzSum = arr => arr.reduce((({x, y, z}, sum) => ({x: sum.x + x, y: sum.y + y , z: sum.z + z})), {x:0, y:0, z:0})
+const xyzAvg = arr => {
+  if (!arr.length) return 0
+  const {x, y, z} = xyzSum(arr)
+  return {x: x / arr.length, y: y / arr.length, z: z / arr.length}
+}
 
 const detectFace = async (model, video, emitFace) => {
   const faces = await Promise.race([model.estimateFaces(video), timeout(500)])
-
   faces &&
     faces.forEach((face, i) => {
+
       const { annotations } = face
       const center = getPositions(annotations.midwayBetweenEyes[0])
-
+      averageCenters[i] = (averageCenters[i] ?? []).concat([center])
+      const avgCenter = xyzAvg(averageCenters[i].slice(-100))
       const baseTilt = calculateTilt(face)
 
       const strippedFace = {
         id: i,
-        position: getPositions(annotations.midwayBetweenEyes[0]),
+        position: diff(avgCenter, center),
         tilt: baseTilt,
         leftEye: diff(center, getPositions(annotations.leftEyeUpper0[3])),
         rightEye: diff(center, getPositions(annotations.rightEyeUpper0[3])),
