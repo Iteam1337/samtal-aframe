@@ -10,14 +10,14 @@ export const calculateTilt = ({ annotations }) => {
   const dX = rightCheek[0][0] - leftCheek[0][0]
   const dY = rightCheek[0][1] - leftCheek[0][1]
 
-  return Math.atan(dY / dX) * 180
+  return Math.atan(dY / dX) * 180 / Math.PI
 }
 
 export const calculateEyebrowTilt = (eyebrow) => {
   const dX = eyebrow[7][0] - eyebrow[0][0]
   const dY = eyebrow[7][1] - eyebrow[0][1]
 
-  return Math.atan(dY / dX) * 180
+  return Math.atan(dY / dX) * 180 / Math.PI
 }
 
 export const calculateExpressions = ({mouth, leftEyebrow, rightEyebrow}) => {
