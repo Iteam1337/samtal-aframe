@@ -28,6 +28,7 @@ const detectFace = async (model, video, emitFace) => {
   faces &&
     faces.forEach((face, i) => {
       const { annotations } = face
+      const center = getPositions(annotations.midwayBetweenEyes[0])
 
       const strippedFace = {
         id: i,
@@ -41,7 +42,7 @@ const detectFace = async (model, video, emitFace) => {
         },
         rightEyebrow: {
           tilt: calculateEyebrowTilt(annotations.rightEyebrowUpper),
-          shape: annotations.rightEyebrowLower
+          shape: annotations.rightEyebrowLower.map(pos => diff(center, getPositions(pos)))
         },
         mouth: {
           shape: [...annotations.lipsUpperOuter, ...annotations.lipsLowerOuter.reverse()],
@@ -107,4 +108,11 @@ const startStream = async (video) => {
   }
 }
 
-startStream()
+setTimeout(() => {
+  if (confirm('Vill du dela dina ansiktsuttryck med detta rummet?\r\n (Tar några sekunder att ladda in...)')) {
+    startStream()
+  }
+}, 500)
+
+// const camera1 = document.querySelector('#first-camera');
+// camera1.object3D.position.x = 2;

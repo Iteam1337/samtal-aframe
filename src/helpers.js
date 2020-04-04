@@ -34,6 +34,9 @@ export const getPositions = (annotation) => {
   return { x: -x, y: -y, z }
 }
 
+
+export const getPositionArray = ({x, y, z}) => [-x*10, -y*10, z*10]
+
 export const midpoint = (pointA, pointB) => ({
   x: (pointA.x + pointB.x) / 2,
   y: (pointA.y + pointB.y) / 2,

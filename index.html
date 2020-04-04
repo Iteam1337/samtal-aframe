@@ -17,29 +17,46 @@
       <a-assets>
         <a-asset-item id="room" src="./cineroom.gltf"></a-asset-item>
         <script id="face" type="html">
-          <a-sphere scale="0.1 0.1 0.1" color="#ff0">
-            <a-box
-              class="leftEyebrow"
-              height="0.10"
-              width="0.35"
-              position="-0.25 0.5 -0.48"
-              color="#000"
-            ></a-box>
-            <a-sphere scale="0.1 0.1 0.1" position="-0.25 0.2 -0.89" color="#fff">
-              <a-sphere scale="0.4 0.4 0.4" position="0 0 -0.8" color="#333"></a-sphere>
+          <a-entity>
+            <a-sphere scale="0.2 0.2 0.2" color="#ff0" class="thehead" shadow segments-height="8" segments-width="8">
+              <a-box
+                class="leftEyebrow"
+                height="0.10"
+                width="0.35"
+                position="-0.25 0.5 -0.48"
+                color="#000"
+              ></a-box>
+              <a-sphere scale="0.1 0.1 0.1" position="-0.25 0.2 -0.89" color="#fff" segments-height="8" segments-width="8">
+                <a-sphere scale="0.4 0.4 0.4" position="0 0 -0.8" color="#333" segments-height="8" segments-width="8"></a-sphere>
+              </a-sphere>
+              <a-box
+                class="rightEyebrow"
+                height="0.10"
+                width="0.35"
+                position="0.25 0.5 -0.48"
+                color="#000"
+              ></a-box>
+              <a-sphere scale="0.1 0.1 0.1" color="#fff" position="0.25 0.2 -0.89" segments-height="8" segments-width="8">
+                <a-sphere scale="0.4 0.4 0.4" position="0 0 -0.8" color="#333" segments-height="8" segments-width="8"></a-sphere>
+              </a-sphere>
+              <a-sphere
+                class="mouth"
+                scale="0.75 0.25 0.25"
+                color="#000"
+                position="0 -0.3 -0.72"
+                segments-height="8"
+                segments-width="8"
+              ></a-sphere>
             </a-sphere>
-            <a-entity class="rightEyebrow" line="start: 0, 1, 0; end: 2 0 -5; color: black"></a-entity>
-            
-            <a-sphere scale="0.1 0.1 0.1" color="#fff" position="0.25 0.2 -0.89">
-              <a-sphere scale="0.4 0.4 0.4" position="0 0 -0.8" color="#333"></a-sphere>
-            </a-sphere>
-            <a-sphere mouth
-              class="mouth"
-              scale="0.75 0.25 0.25"
-              color="#000"
-              position="0 -0.3 -0.72"
+            <a-sphere
+              class="seat"
+              scale="0.3 0.02 0.3"
+              color="#fff"
+              position="0 0 0"
+              segments-height="8"
+              segments-width="8"
             ></a-sphere>
-          </a-sphere>
+          </a-entity>
         </script>
       </a-assets>
       <a-entity
@@ -48,13 +65,17 @@
         rotation="0 90 0"
         scale="0.2 0.2 0.2"
       ></a-entity>
+      <a-video src="#video" width="10" height="6.6" position="-0.5 4.5 -7.5"></a-video>
       <a-sky color="#aabbcc"></a-sky>
-      <a-entity id="rig" position="0.3 1.8 1" wasd-controls look-controls>
-        <a-entity
-          camera="active: true;"
-        ></a-entity>
+      <a-entity id="first-camera" position="0.3 1.8 1" wasd-controls look-controls>
+        <a-entity camera></a-entity>
       </a-entity>
+
+      <!-- <a-entity id="second-camera" position="1 2 4" look-controls>
+        <a-entity camera="active: true;"></a-entity>
+      </a-entity> -->
     </a-scene>
+
     <video
       id="video"
       height="200"
@@ -67,7 +88,10 @@
     <audio id="happy" src="/sounds/laugh.wav"></audio>
     <audio id="interested" src="/sounds/hmm.ogg"></audio>
 
-    <div id="meet"></div>
+    <div id="controls">
+      <!-- <button onclick="document.querySelector('#second-camera').setAttribute('camera', 'active', true)">Scenkamera</button> -->
+
+    </div>
     <script src="./src/script.js" type="text/javascript"></script>
     <script src="./src/sounds.js" type="text/javascript"></script>
   </body>
