@@ -5,6 +5,9 @@ AFRAME.registerComponent('face', {
     tilt: {type: 'number'},
     leftEye: {type: 'vec3'},
     rightEye: {type: 'vec3'},
+    expressions: {
+      smile: {type: 'number'},
+    },
     leftEyebrow: {
       tilt: {type: 'number'},
       position: {type: 'vec3'},
