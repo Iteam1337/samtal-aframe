@@ -82,8 +82,8 @@ AFRAME.registerComponent('face', {
       headEl.object3D.position.z = this.data.position.z * 0.1
       headEl.object3D.rotation.set(
         THREE.Math.degToRad(0),
-        THREE.Math.degToRad(parseFloat(this.data.tilt.toFixed(2))),
-        THREE.Math.degToRad(0)
+        THREE.Math.degToRad(0),
+        THREE.Math.degToRad(this.data.tilt)
       )
     }
   }
