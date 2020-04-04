@@ -42,7 +42,7 @@ const detectFace = async (model, video, emitFace) => {
         },
         rightEyebrow: {
           tilt: calculateEyebrowTilt(annotations.rightEyebrowUpper),
-          shape: annotations.rightEyebrowLower.map(pos => diff(center, getPositions(pos)))
+          position: getPositions(annotations.rightEyebrowUpper[4]),
         },
         mouth: {
           shape: [...annotations.lipsUpperOuter, ...annotations.lipsLowerOuter.reverse()],
@@ -70,9 +70,11 @@ const detectFace = async (model, video, emitFace) => {
 }
 
 async function main() {
-  const video = document.querySelector('video')
+  const video = document.querySelector('#video')
   await tf.ready()
+  console.log('loading models...')
   const model = await facemesh.load()
+  console.log('finished loading models...')
 
   detectFace(model, video, (face) => {
     socket.emit('face', face)
@@ -89,7 +91,7 @@ socket.on('faces', (faces) => {
 
 const startStream = async (video) => {
   try {
-    const video = document.querySelector('video')
+    const video = document.querySelector('#video')
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'user' },
     })
@@ -97,7 +99,7 @@ const startStream = async (video) => {
     if (!stream) {
       throw new Error('You need to allow video to use this service.')
     }
-
+    console.log('setting video to stream')
     video.srcObject = stream
     video.onloadeddata = () => main()
   } catch (err) {

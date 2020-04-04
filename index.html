@@ -16,6 +16,7 @@
     <a-scene stats arjs=’sourceType: webcam;’>
       <a-assets>
         <a-asset-item id="room" src="./cineroom.gltf"></a-asset-item>
+        <a-asset-item id="logo" src="./logo.png"></a-asset-item>
         <script id="face" type="html">
           <a-entity>
             <a-sphere scale="0.2 0.2 0.2" color="#ff0" class="thehead" shadow segments-height="8" segments-width="8">
@@ -65,8 +66,9 @@
         rotation="0 90 0"
         scale="0.2 0.2 0.2"
       ></a-entity>
-      <a-video src="#video" width="10" height="6.6" position="-0.5 4.5 -7.5"></a-video>
-      <a-sky color="#aabbcc"></a-sky>
+      <a-box position="-5.8 0.3 -7.2" material="src: logo.png; roughness: 1; metalness: 0" shadow></a-box>
+      <a-video src="#presentation" width="10" height="6.6" position="-0.5 4.5 -7.5"></a-video>
+      <a-sky color="#333"></a-sky>
       <a-entity id="first-camera" position="0.3 1.8 1" wasd-controls look-controls>
         <a-entity camera></a-entity>
       </a-entity>
@@ -76,6 +78,17 @@
       </a-entity> -->
     </a-scene>
 
+
+    <video
+      id="presentation"
+      height="2"
+      width="2"
+      src="/assets/video.mp4"
+      style="position: fixed; bottom: 0; right: 0;"
+      autoplay
+      muted
+    ></video>
+    
     <video
       id="video"
       height="200"

@@ -8,6 +8,8 @@ export const createFace = (scene) => (
   const id = `face-${i}`
   let faceEl = document.getElementById(id)
 
+  console.log('face', position)
+
   if (!faceEl) {
     faceEl = document.createElement('a-entity')
     faceEl.setAttribute('template', 'src: #face')
