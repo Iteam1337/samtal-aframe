@@ -11,13 +11,13 @@ export const createFace = (scene) => (
 
   if (!faceEl) {
     faceEl = document.createElement('a-entity')
-    faceEl.setAttribute('face')
+    faceEl.setAttribute('face', model)
     faceEl.setAttribute('template', 'src: #face')
     faceEl.setAttribute('id', id)
     scene.appendChild(faceEl)
   }
-
-  for(let key in model) faceEl.setAttribute(key, JSON.stringify(model[key]))
+  faceEl.setAttribute('face', model)
+//  for(let key in model) faceEl.setAttribute(key, JSON.stringify(model[key]))
 
   const row = Math.floor(i / 7)
   const col = i % 7

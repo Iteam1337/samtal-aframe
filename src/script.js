@@ -112,11 +112,6 @@ socket.on('faces', (faces) => {
     return
   }
 
-  faces = [...faces, ...faces, ...faces, ...faces, ...faces]
-  faces = [...faces, ...faces, ...faces, ...faces, ...faces]
-  faces = [...faces, ...faces]
-  faces.forEach((x, i) => {x.id = `${i}`});
-
   faces.forEach(createFace(scene))
 })
 
@@ -142,10 +137,10 @@ const startStream = async (video) => {
 }
 
 setTimeout(() => {
- // if (confirm('Vill du dela dina ansiktsuttryck med detta rummet?\r\n (Tar några sekunder att ladda in...)')) {
+ if (confirm('Vill du dela dina ansiktsuttryck med detta rummet?\r\n (Tar några sekunder att ladda in...)\r\nIngen data sparas på servern.')) {
     startStream()
-//  }
-}, 500)
+  }
+}, 5000)
 
 const camera1 = document.querySelector('#first-camera');
 const camerarig1 = document.querySelector('#first-camera-rig');

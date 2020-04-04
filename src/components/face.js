@@ -39,12 +39,12 @@ AFRAME.registerComponent('face', {
   },
 
   tick: function (time, timeDelta) {
-    return;
 
-    const faceEl = this.el
+    
+    const headEl = this.el.getElementsByClassName('thehead')[0]
+    const mouthEl = this.el.getElementsByClassName('mouth')[0]
 
-    const headEl = faceEl.getElementsByClassName('thehead')[0]
-    const mouthEl = faceEl.getElementsByClassName('mouth')[0]
+    console.log('head', headEl)
 
     if (mouthEl) {
       mouthEl.position = this.data.mouth.position
@@ -52,7 +52,7 @@ AFRAME.registerComponent('face', {
       mouthEl.object3D.scale.y = this.data.mouth.height * 5
     }
 
-    const leftEyebrowEl = faceEl.getElementsByClassName('leftEyebrow')[0]
+    const leftEyebrowEl = this.el.getElementsByClassName('leftEyebrow')[0]
 
     if (leftEyebrowEl) {
       leftEyebrowEl.object3D.rotation.set(
@@ -62,7 +62,7 @@ AFRAME.registerComponent('face', {
       )
     }
 
-    const rightEyebrowEl = faceEl.getElementsByClassName('rightEyebrow')[0]
+    const rightEyebrowEl = this.el.getElementsByClassName('rightEyebrow')[0]
 
     if (rightEyebrowEl) { 
   //    const line = rightEyebrow.shape.reduce((prev, b) => prev + ` end: ${getPositionArray(b).join(' ')}; start: ${getPositionArray(b).join(' ')};`, '')
@@ -75,7 +75,7 @@ AFRAME.registerComponent('face', {
       )
     }
 
-    faceEl.color = `rgba(255, 255, 255)`
+    this.el.color = `rgba(255, 255, 255)`
 
     if (headEl) {
       headEl.object3D.position.x = this.data.position.x;

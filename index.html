@@ -14,17 +14,17 @@
   </head>
   <body>
   <body>
-    <a-scene >
-      <a-entity light="type: directional; color: #FFF; intensity: 0.4" position="3 5 -3"></a-entity>
+    <a-scene stats>
+      <!--<a-entity light="type: directional; color: #FFF; intensity: 0.4" position="3 5 -3"></a-entity>
       <a-entity light="type: directional; color: #FFF; intensity: 0.4" position="5 5 -3"></a-entity>
-      <a-entity light="type: ambient; color: #BBF"></a-entity>
+      <a-entity light="type: ambient; color: #BBF"></a-entity>-->
 
       <a-entity id="first-camera-rig">
         <a-entity id="first-camera" camera look-controls camera="fov: 50" wasd-controls></a-entity>
       </a-entity>
 
       <a-assets>
-        <a-asset-item id="room" shadow src="./cineroom.gltf"></a-asset-item>
+        <a-asset-item id="room" src="./cineroom.gltf"></a-asset-item>
         
         <a-asset-item id="logo" src="./logo.png"></a-asset-item>
         <script id="face" type="html">
@@ -77,7 +77,7 @@
         scale="0.2 0.2 0.2"
       ></a-entity>
       <a-box position="-5.8 0.3 -7.2" material="src: logo.png; roughness: 1; metalness: 0" shadow></a-box>
-      <a-video src="#presentation" width="10" emissive="#445" height="6.6" position="-0.5 4.5 -7.5"></a-video>
+      <a-video src="#presentation" width="10" height="6.6" position="-0.5 4.5 -7.5"></a-video>
       <a-sky color="#333"></a-sky>
       <a-entity id="first-camera" position="0.3 1.8 1" wasd-controls look-controls>
         <a-entity camera></a-entity>
