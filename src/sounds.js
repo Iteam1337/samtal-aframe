@@ -7,9 +7,9 @@ audio.addEventListener('canplay', () => {
 })
 
 socket.on('faces', (faces) => {
-  faces.map((face) => {
+  /*faces.map((face) => {
     if (face.mouth.height * 10 > 0.6) {
       audio.play()
     }
-  })
+  })*/
 })

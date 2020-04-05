@@ -174,19 +174,29 @@ const startStream = async (video) => {
     video.onloadeddata = () => main()
   } catch (err) {
     alert(
-      'Sorry. You need to use Google Chrome or Firefox to use this. ' +
+      'Sorry. We got an error. Please make sure you use Google Chrome. You can still walk around in the room. ' +
         err.message
     )
   }
 }
 
 setTimeout(() => {
- if (confirm('Vill du dela dina ansiktsuttryck med detta rummet?\r\n (Tar några sekunder att ladda in...)\r\nIngen data sparas på servern.')) {
+ if (confirm(`Welcome to Viroom!
+ This is a made in #hackthecrisis to help conferences, meetings, webinars, theaters and others to get better contact with the audience. 
+
+ If you are on mobile the expericence is better if you press Cancel on the following question, you can still look around.
+ 
+ Would you like to share your facial expressions with this service?
+ (It will take a few seconds before your avatar pops up...)
+ 
+ Privacy: No data is being saved on the server and all data is encrypted.
+ 
+ Take a seat!`)) {
     startStream()
   }
 }, 5000)
 
 const camera1 = document.querySelector('#first-camera');
 const camerarig1 = document.querySelector('#first-camera-rig');
-camerarig1.object3D.lookAt(0, 1, -6);
-camerarig1.object3D.position.set(-2, 1.5, -6);
+camerarig1.object3D.lookAt(3, 1, 6);
+camerarig1.object3D.position.set(4, 1.5, 1);

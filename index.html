@@ -14,10 +14,10 @@
   </head>
   <body>
   <body>
-    <a-scene stats shadow="type: pcfsoft">
+    <a-scene shadow="type: pcfsoft">
       <a-entity light="type: ambient; color: #666"></a-entity>
       <a-entity id="spot1target" rotation="-80 0 0" position="-1 7 0">
-        <a-entity light="type: spot; color: #FFF; intensity: 1.0; penumbra: 1.0; castShadow: true; shadowCameraVisible: true; shadowMapWidth: 2048; shadowMapHeight: 2048; shadowBias: -0.001;" position="0 0 0">
+        <a-entity light="type: spot; color: #EEF; intensity: 1.0; penumbra: 1.0; castShadow: true; shadowCameraVisible: false; shadowMapWidth: 2048; shadowMapHeight: 2048; shadowBias: -0.001;" position="0 0 0">
         </a-entity>
       </a-entity>
 
@@ -86,6 +86,9 @@
         shadow
       ></a-entity>
       <a-box position="-5.8 0.3 -7.2" material="src: logo.png; roughness: 1; metalness: 0" shadow></a-box>
+      <a-box position="4.0 0.1 -7.2" height="0.5" material="src: iteam.jpg; repeat: 1 2; roughness: 1; metalness: 0" shadow></a-box>
+      <a-box position="4.0 0.6-7.2" height="0.5" material="src: influera.jpg; repeat: 1 1; roughness: 1; metalness: 0" shadow></a-box>
+      
       <a-video src="#presentation" width="10" height="6.6" position="-0.5 4.5 -7.5"></a-video>
       <a-sky color="#000"></a-sky>
       <a-entity id="first-camera" position="0.3 1.8 1" wasd-controls look-controls>
