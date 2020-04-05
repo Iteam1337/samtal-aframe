@@ -50,6 +50,21 @@ export const getPositions = (annotation) => {
   return { x: -x, y: -y, z }
 }
 
+export const averagePosition = (positions) => {
+  let x=0, y=0, z=0
+
+  positions.map(p => {
+    x += p[0]
+    y += p[1]
+    z += p[2]
+  })
+
+  x /= positions.length
+  y /= positions.length
+  z /= positions.length
+
+  return { x: -x, y: -y, z }
+}
 
 export const getPositionArray = ({x, y, z}) => [-x*10, -y*10, z*10]
 
@@ -64,3 +79,16 @@ export const diff = (pointA, pointB) => ({
   y: pointA.y - pointB.y,
   z: pointA.z - pointB.z,
 })
+
+export const dist = (pointA, pointB) => {
+  const d = diff(pointA, pointB);
+  return Math.sqrt(d.x*d.x + d.y*d.y + d.z*d.z);
+}
+
+export const lerpclamp = (x, x0, x1, y0, y1) => {
+  var t = (x-x0) / (x1 - x0);
+  if (t < 0) t = 0;
+  if (t > 1) t = 1;
+  t = y0 + (t * (y1 - y0));
+  return t;
+}

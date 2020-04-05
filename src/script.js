@@ -10,10 +10,13 @@ import {
   calculateYaw,
   calculateEyebrowTilt,
   calculateExpressions,
+  averagePosition,
   getPositions,
   midpoint,
   diff,
   timeout,
+  dist,
+  lerpclamp,
 } from './helpers.js'
 
 const room = document.querySelector('#room')
@@ -45,6 +48,17 @@ const detectFace = async (model, video, emitFace) => {
       const baseYaw = calculateYaw(face) // look up/down
       const baseRoll = calculateRoll(face) // roll head left/right shoulder to shoulder
 
+
+      const leftEyeBottom = averagePosition(annotations.leftEyeLower0)
+      const leftEyebrowTop = averagePosition(annotations.leftEyebrowUpper)
+      const leftEyebrowPosition = lerpclamp(dist(leftEyeBottom, leftEyebrowTop), 20, 40, 0, 1); // distances seems to be in the range 20-40 ish
+      // console.log('left eye', leftEyebrowPosition)
+
+      const rightEyeBottom = averagePosition(annotations.rightEyeLower0)
+      const rightEyebrowTop = averagePosition(annotations.rightEyebrowUpper)
+      const rightEyebrowPosition = lerpclamp(dist(rightEyeBottom, rightEyebrowTop), 20, 40, 0, 1);
+      // console.log('right eye', rightEyebrowPosition)
+
       const strippedFace = {
         id: i,
         position: diff(avgCenter, center),
@@ -53,14 +67,8 @@ const detectFace = async (model, video, emitFace) => {
         yaw: baseYaw,
         leftEye: diff(center, getPositions(annotations.leftEyeUpper0[3])),
         rightEye: diff(center, getPositions(annotations.rightEyeUpper0[3])),
-        leftEyebrow: {
-          tilt: 0, //calculateEyebrowTilt(annotations.leftEyebrowUpper) - baseTilt,
-          position: diff(center, getPositions(annotations.leftEyebrowLower[4])),
-        },
-        rightEyebrow: {
-          tilt: 0, // calculateEyebrowTilt(annotations.rightEyebrowUpper) - baseTilt,
-          position: diff(center, getPositions(annotations.rightEyebrowUpper[4])),
-        },
+        leftEyebrow: leftEyebrowPosition,
+        rightEyebrow: rightEyebrowPosition,
         mouth: {
           // shape: [...annotations.lipsUpperOuter, ...annotations.lipsLowerOuter.reverse()],
           position: diff(center, midpoint(

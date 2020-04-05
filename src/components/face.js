@@ -10,14 +10,8 @@ AFRAME.registerComponent('face', {
     expressions: {
       smile: {type: 'number'},
     },
-    leftEyebrow: {
-      tilt: {type: 'number'},
-      position: {type: 'vec3'},
-    },
-    rightEyebrow: {
-      tilt: {type: 'number'},
-      position: {type: 'vec3'},
-    },
+    leftEyebrow: {type: 'number'},
+    rightEyebrow: {type: 'number'},
     mouth: {
       position: {type: 'vec3'},
       height: {type: 'number'},
@@ -50,26 +44,13 @@ AFRAME.registerComponent('face', {
     }
 
     const leftEyebrowEl = this.el.getElementsByClassName('leftEyebrow')[0]
-
     if (leftEyebrowEl) {
-      leftEyebrowEl.object3D.rotation.set(
-        THREE.Math.degToRad(0),
-        THREE.Math.degToRad(0),
-        THREE.Math.degToRad(this.data.leftEyebrow.tilt)
-      )
+      leftEyebrowEl.object3D.position.y = this.data.leftEyebrow * 0.3 + 0.5;
     }
 
     const rightEyebrowEl = this.el.getElementsByClassName('rightEyebrow')[0]
-
-    if (rightEyebrowEl) { 
-  //    const line = rightEyebrow.shape.reduce((prev, b) => prev + ` end: ${getPositionArray(b).join(' ')}; start: ${getPositionArray(b).join(' ')};`, '')
-  //    rightEyebrowEl.setAttribute('line', `${line} color: #f00`)
-      //rightEyebrowEl.setAttribute('scale', '2 2 2')
-      rightEyebrowEl.object3D.rotation.set(
-        THREE.Math.degToRad(0),
-        THREE.Math.degToRad(0),
-        THREE.Math.degToRad(this.data.rightEyebrow.tilt)
-      )
+    if (rightEyebrowEl) {
+      rightEyebrowEl.object3D.position.y = this.data.rightEyebrow * 0.3 + 0.5;
     }
 
     this.el.color = `rgba(255, 255, 255)`
