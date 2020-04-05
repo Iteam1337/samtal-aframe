@@ -6,11 +6,11 @@ export const pick = (obj, keys) =>
     .reduce((res, o) => Object.assign(res, o), {})
 
 export const calculateYaw = ({ annotations }) => {
-  const { leftCheek, leftEyeUpper0 } = annotations
-  const dX = leftEyeUpper0[3][0][0] - leftCheek[0][0]
-  const dY = leftEyeUpper0[3][0][1] - leftCheek[0][1]
+  const { noseTip, noseBottom } = annotations
+  const dX = noseBottom[0][2] - noseTip[0][2]
+  const dY = noseBottom[0][1] - noseTip[0][1]
 
-  return Math.atan2(-dY, -dX) * 360 / Math.PI
+  return Math.atan2(dY, dX) * 360 / Math.PI - 90
 }
 
 export const calculateRoll = ({ annotations }) => {

@@ -27,13 +27,18 @@ room.setAttribute('src', sceneBackground)
 const socket = io()
 const isPresenter = true
 const averageCenters = {}
-
-const xyzSum = arr => arr.reduce((({x, y, z}, sum) => ({x: sum.x + x, y: sum.y + y , z: sum.z + z})), {x:0, y:0, z:0})
-const xyzAvg = arr => {
-  if (!arr.length) return 0
-  const {x, y, z} = xyzSum(arr)
-  return {x: x / arr.length, y: y / arr.length, z: z / arr.length}
+let movingAverageCenter = {
+  x: 0,
+  y: 0,
+  z: 0,
 }
+
+// const xyzSum = arr => arr.reduce((({x, y, z}, sum) => ({x: sum.x + x, y: sum.y + y , z: sum.z + z})), {x:0, y:0, z:0})
+// const xyzAvg = arr => {
+//   if (!arr.length) return 0
+//   const {x, y, z} = xyzSum(arr)
+//   return {x: x / arr.length, y: y / arr.length, z: z / arr.length}
+// }
 
 const detectFace = async (model, video, emitFace) => {
   const faces = await Promise.race([model.estimateFaces(video), timeout(500)])
@@ -41,27 +46,32 @@ const detectFace = async (model, video, emitFace) => {
     faces.forEach((face, i) => {
 
       const { annotations } = face
-      const center = getPositions(annotations.midwayBetweenEyes[0])
-      averageCenters[i] = (averageCenters[i] ?? []).concat([center])
-      const avgCenter = xyzAvg(averageCenters[i].slice(-200))
-      const baseTilt = calculateTilt(face) / 4.0 // turn head, look left/right
-      const baseYaw = calculateYaw(face) // look up/down
-      const baseRoll = calculateRoll(face) // roll head left/right shoulder to shoulder
 
+      const center = getPositions(annotations.midwayBetweenEyes[0])
+
+      movingAverageCenter.x *= 0.9
+      movingAverageCenter.y *= 0.9
+      movingAverageCenter.z *= 0.9
+
+      movingAverageCenter.x += 0.1 * center.x
+      movingAverageCenter.y += 0.1 * center.y
+      movingAverageCenter.z += 0.1 * center.z
+
+      const baseTilt = calculateTilt(face) / 4.0 // turn head, look left/right
+      const baseYaw = calculateYaw(face) / 2.0 // look up/down
+      const baseRoll = calculateRoll(face) // roll head left/right shoulder to shoulder
 
       const leftEyeBottom = averagePosition(annotations.leftEyeLower0)
       const leftEyebrowTop = averagePosition(annotations.leftEyebrowUpper)
       const leftEyebrowPosition = lerpclamp(dist(leftEyeBottom, leftEyebrowTop), 20, 40, 0, 1); // distances seems to be in the range 20-40 ish
-      // console.log('left eye', leftEyebrowPosition)
 
       const rightEyeBottom = averagePosition(annotations.rightEyeLower0)
       const rightEyebrowTop = averagePosition(annotations.rightEyebrowUpper)
       const rightEyebrowPosition = lerpclamp(dist(rightEyeBottom, rightEyebrowTop), 20, 40, 0, 1);
-      // console.log('right eye', rightEyebrowPosition)
 
       const strippedFace = {
         id: i,
-        position: diff(avgCenter, center),
+        position: diff(movingAverageCenter, center),
         tilt: baseTilt,
         roll: baseRoll,
         yaw: baseYaw,
@@ -70,7 +80,6 @@ const detectFace = async (model, video, emitFace) => {
         leftEyebrow: leftEyebrowPosition,
         rightEyebrow: rightEyebrowPosition,
         mouth: {
-          // shape: [...annotations.lipsUpperOuter, ...annotations.lipsLowerOuter.reverse()],
           position: diff(center, midpoint(
             getPositions(annotations.lipsUpperOuter[5]),
             getPositions(annotations.lipsLowerOuter[5])
