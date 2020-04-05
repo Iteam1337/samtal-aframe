@@ -132,12 +132,21 @@ function createMockFace(id) {
 let useSocket = true;
 global.debugFaces = () => {
   useSocket = false;
+
+  for(var i=0; i<40; i++) createFace(scene)(createMockFace(`face${i}`), i);
+
   setInterval(() => {
-    createFace(scene)(createMockFace('face0'), 0);
-    createFace(scene)(createMockFace('face1'), 1);
-    createFace(scene)(createMockFace('face2'), 2);
-    createFace(scene)(createMockFace('face3'), 3);
-  }, 1000);
+    for(var i=0; i<40; i+=4) createFace(scene)(createMockFace(`face${i}`), i);
+  }, 600);
+  setInterval(() => {
+    for(var i=1; i<40; i+=4) createFace(scene)(createMockFace(`face${i}`), i);
+  }, 700);
+  setInterval(() => {
+    for(var i=2; i<40; i+=4) createFace(scene)(createMockFace(`face${i}`), i);
+  }, 800);
+  setInterval(() => {
+    for(var i=3; i<40; i+=4) createFace(scene)(createMockFace(`face${i}`), i);
+  }, 900);
 };
 
 socket.on('faces', (faces) => {
