@@ -6,6 +6,8 @@ import { createFace } from './createFace'
 import {
   pick,
   calculateTilt,
+  calculateRoll,
+  calculateYaw,
   calculateEyebrowTilt,
   calculateExpressions,
   getPositions,
@@ -39,20 +41,24 @@ const detectFace = async (model, video, emitFace) => {
       const center = getPositions(annotations.midwayBetweenEyes[0])
       averageCenters[i] = (averageCenters[i] ?? []).concat([center])
       const avgCenter = xyzAvg(averageCenters[i].slice(-200))
-      const baseTilt = calculateTilt(face)
+      const baseTilt = calculateTilt(face) / 4.0 // turn head, look left/right
+      const baseYaw = calculateYaw(face) // look up/down
+      const baseRoll = calculateRoll(face) // roll head left/right shoulder to shoulder
 
       const strippedFace = {
         id: i,
         position: diff(avgCenter, center),
         tilt: baseTilt,
+        roll: baseRoll,
+        yaw: baseYaw,
         leftEye: diff(center, getPositions(annotations.leftEyeUpper0[3])),
         rightEye: diff(center, getPositions(annotations.rightEyeUpper0[3])),
         leftEyebrow: {
-          tilt: calculateEyebrowTilt(annotations.leftEyebrowUpper) - baseTilt,
+          tilt: 0, //calculateEyebrowTilt(annotations.leftEyebrowUpper) - baseTilt,
           position: diff(center, getPositions(annotations.leftEyebrowLower[4])),
         },
         rightEyebrow: {
-          tilt: calculateEyebrowTilt(annotations.rightEyebrowUpper) - baseTilt,
+          tilt: 0, // calculateEyebrowTilt(annotations.rightEyebrowUpper) - baseTilt,
           position: diff(center, getPositions(annotations.rightEyebrowUpper[4])),
         },
         mouth: {

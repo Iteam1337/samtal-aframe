@@ -5,10 +5,26 @@ export const pick = (obj, keys) =>
     .map((k) => (k in obj ? { [k]: obj[k] } : {}))
     .reduce((res, o) => Object.assign(res, o), {})
 
-export const calculateTilt = ({ annotations }) => {
+export const calculateYaw = ({ annotations }) => {
+  const { leftCheek, leftEyeUpper0 } = annotations
+  const dX = leftEyeUpper0[3][0][0] - leftCheek[0][0]
+  const dY = leftEyeUpper0[3][0][1] - leftCheek[0][1]
+
+  return Math.atan2(-dY, -dX) * 360 / Math.PI
+}
+
+export const calculateRoll = ({ annotations }) => {
   const { leftCheek, rightCheek } = annotations
   const dX = rightCheek[0][0] - leftCheek[0][0]
   const dY = rightCheek[0][1] - leftCheek[0][1]
+
+  return Math.atan2(-dY, -dX) * 360 / Math.PI
+}
+
+export const calculateTilt = ({ annotations }) => {
+  const { leftCheek, rightCheek } = annotations
+  const dX = rightCheek[0][0] - leftCheek[0][0]
+  const dY = rightCheek[0][2] - leftCheek[0][2]
 
   return Math.atan2(-dY, -dX) * 360 / Math.PI
 }
@@ -29,7 +45,7 @@ export const calculateExpressions = ({mouth, leftEyebrow, rightEyebrow}) => {
 }
 
 export const getPositions = (annotation) => {
-  const [x, y, z] = annotation.map((p) => p / 1000)
+  const [x, y, z] = annotation.map((p) => p / 100)
 
   return { x: -x, y: -y, z }
 }
