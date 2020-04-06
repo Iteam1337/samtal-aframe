@@ -1,51 +1,51 @@
-
-const Lerpomato = (a=undefined, b=undefined) => {
-  if (b === undefined) b = 0.01 + 0.02 * Math.random();
-  if (a === undefined) a = 0.92 + 0.03 * Math.random();
-  var c = 0;
-  var v = 0;
+const Lerpomato = (a = undefined, b = undefined) => {
+  if (b === undefined) b = 0.01 + 0.02 * Math.random()
+  if (a === undefined) a = 0.92 + 0.03 * Math.random()
+  var c = 0
+  var v = 0
   return {
-    tick: newvalue => {
+    tick: (newvalue) => {
       v *= a
       v += b * (newvalue - c)
       c += v
       return c
-    }
+    },
   }
 }
 
 AFRAME.registerComponent('face', {
   schema: {
-    dummy: {type: 'number'},
-    position: {type: 'vec3'},
-    tilt: {type: 'number'},
-    roll: {type: 'number'},
-    yaw: {type: 'number'},
+    userId: { type: 'string' },
+    dummy: { type: 'number' },
+    position: { type: 'vec3' },
+    tilt: { type: 'number' },
+    roll: { type: 'number' },
+    yaw: { type: 'number' },
     expressions: {
-      smile: {type: 'number'},
+      smile: { type: 'number' },
     },
-    leftEyebrow: {type: 'number'},
-    rightEyebrow: {type: 'number'},
+    leftEyebrow: { type: 'number' },
+    rightEyebrow: { type: 'number' },
     mouth: {
-      height: {type: 'number'},
-      width: {type: 'number'},
+      height: { type: 'number' },
+      width: { type: 'number' },
     },
   },
 
   init: function (data) {
     console.log('init face', this.data)
-    this.leftEyebrowLerp = new Lerpomato();
-    this.rightEyebrowLerp = new Lerpomato();
-    this.rollLerp = new Lerpomato();
-    this.yawLerp = new Lerpomato();
-    this.tiltLerp = new Lerpomato();
-    this.pxLerp = new Lerpomato();
-    this.pyLerp = new Lerpomato();
-    this.pzLerp = new Lerpomato();
-    this.mwLerp = new Lerpomato();
-    this.mhLerp = new Lerpomato();
+    this.leftEyebrowLerp = new Lerpomato()
+    this.rightEyebrowLerp = new Lerpomato()
+    this.rollLerp = new Lerpomato()
+    this.yawLerp = new Lerpomato()
+    this.tiltLerp = new Lerpomato()
+    this.pxLerp = new Lerpomato()
+    this.pyLerp = new Lerpomato()
+    this.pzLerp = new Lerpomato()
+    this.mwLerp = new Lerpomato()
+    this.mhLerp = new Lerpomato()
 
-    this.lastmodel = '';
+    this.lastmodel = ''
   },
 
   remove: function () {
@@ -66,36 +66,53 @@ AFRAME.registerComponent('face', {
     const mhValue = this.pzLerp.tick(this.data.mouth.height)
 
     const mouthEl = this.el.getElementsByClassName('mouth')[0]
+
     if (mouthEl) {
       mouthEl.object3D.scale.x = mwValue * 0.8
       mouthEl.object3D.scale.y = mhValue * 0.4
     }
 
     const leftEyebrowEl = this.el.getElementsByClassName('leftEyebrow')[0]
+
     if (leftEyebrowEl) {
-      leftEyebrowEl.object3D.position.y = leftEyebrowValue * 0.35 + 0.45;
+      leftEyebrowEl.object3D.position.y = leftEyebrowValue * 0.35 + 0.45
     }
 
     const rightEyebrowEl = this.el.getElementsByClassName('rightEyebrow')[0]
+
     if (rightEyebrowEl) {
-      rightEyebrowEl.object3D.position.y = rightEyebrowValue * 0.35 + 0.45;
+      rightEyebrowEl.object3D.position.y = rightEyebrowValue * 0.35 + 0.45
     }
 
     const neckEl = this.el.getElementsByClassName('theneck')[0]
+
     if (neckEl) {
-      neckEl.object3D.position.x = pxValue * 0.1;
-      neckEl.object3D.position.y = pyValue * 0.1 + 0.6;
+      neckEl.object3D.position.x = pxValue * 0.1
+      neckEl.object3D.position.y = pyValue * 0.1 + 0.6
       neckEl.object3D.position.z = pzValue * 0.1
     }
 
     const headEl = this.el.getElementsByClassName('thehead')[0]
+
     if (headEl) {
-      headEl.object3D.setRotationFromEuler(new THREE.Euler(
-        THREE.Math.degToRad(yawValue),
-        THREE.Math.degToRad(tiltValue),
-        THREE.Math.degToRad(rollValue),
-        'ZYX'
-      ))
+      const headElColor = headEl.getAttribute('color')
+      const currentUserColor = '#4FD1C5'
+      const isCurrentUser =
+        this.data.userId === localStorage.getItem('viroom/userid')
+
+      if (isCurrentUser && headElColor !== currentUserColor) {
+        headEl.setAttribute('color', currentUserColor)
+      }
+
+      headEl.object3D.setRotationFromEuler(
+        new THREE.Euler(
+          THREE.Math.degToRad(yawValue),
+          THREE.Math.degToRad(tiltValue),
+          THREE.Math.degToRad(rollValue),
+          'ZYX'
+        )
+      )
     }
-  }
-});
+  },
+})
+

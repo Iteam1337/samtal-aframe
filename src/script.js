@@ -1,5 +1,6 @@
 import 'babel-polyfill' // need this for some reason
 
+import cuid from 'cuid'
 import minecraftCube from '../assets/minecraft.png'
 import sceneBackground from '../assets/cineroom.gltf'
 import { createFace } from './createFace'
@@ -23,6 +24,12 @@ const scene = document.querySelector('a-scene')
 
 room.setAttribute('src', sceneBackground)
 
+const userId = 'viroom/userid'
+
+if (!localStorage.getItem(userId)) {
+  localStorage.setItem(userId, cuid())
+}
+
 const socket = io()
 const isPresenter = true
 let movingAverageCenter = {
@@ -35,7 +42,6 @@ const detectFace = async (model, video, emitFace) => {
   const faces = await Promise.race([model.estimateFaces(video), timeout(500)])
   faces &&
     faces.forEach((face, i) => {
-
       const { annotations } = face
 
       const center = getPositions(annotations.midwayBetweenEyes[0])
@@ -54,14 +60,27 @@ const detectFace = async (model, video, emitFace) => {
 
       const leftEyeBottom = averagePosition(annotations.leftEyeLower0)
       const leftEyebrowTop = averagePosition(annotations.leftEyebrowUpper)
-      const leftEyebrowPosition = lerpclamp(dist(leftEyeBottom, leftEyebrowTop), 20, 40, 0, 1); // distances seems to be in the range 20-40 ish
+      const leftEyebrowPosition = lerpclamp(
+        dist(leftEyeBottom, leftEyebrowTop),
+        20,
+        40,
+        0,
+        1
+      ) // distances seems to be in the range 20-40 ish
 
       const rightEyeBottom = averagePosition(annotations.rightEyeLower0)
       const rightEyebrowTop = averagePosition(annotations.rightEyebrowUpper)
-      const rightEyebrowPosition = lerpclamp(dist(rightEyeBottom, rightEyebrowTop), 20, 40, 0, 1);
+      const rightEyebrowPosition = lerpclamp(
+        dist(rightEyeBottom, rightEyebrowTop),
+        20,
+        40,
+        0,
+        1
+      )
 
       const strippedFace = {
         id: i,
+        userId: localStorage.getItem(userId),
         position: diff(movingAverageCenter, center),
         tilt: baseTilt,
         roll: baseRoll,
@@ -71,10 +90,13 @@ const detectFace = async (model, video, emitFace) => {
         leftEyebrow: leftEyebrowPosition,
         rightEyebrow: rightEyebrowPosition,
         mouth: {
-          position: diff(center, midpoint(
-            getPositions(annotations.lipsUpperOuter[5]),
-            getPositions(annotations.lipsLowerOuter[5])
-          )),
+          position: diff(
+            center,
+            midpoint(
+              getPositions(annotations.lipsUpperOuter[5]),
+              getPositions(annotations.lipsLowerOuter[5])
+            )
+          ),
           height: diff(
             getPositions(annotations.lipsUpperOuter[5]),
             getPositions(annotations.lipsLowerOuter[4])
@@ -86,7 +108,10 @@ const detectFace = async (model, video, emitFace) => {
         },
       }
 
-      const faceWithExpressions = {...strippedFace, expressions: calculateExpressions(strippedFace)}
+      const faceWithExpressions = {
+        ...strippedFace,
+        expressions: calculateExpressions(strippedFace),
+      }
 
       emitFace(faceWithExpressions)
     })
@@ -108,53 +133,57 @@ async function main() {
 
 function createMockFace(id) {
   return {
-    "id": id,
-    "position":{
-      "x":-1 + Math.random() * 2,
-      "y":-1 + Math.random() * 2,
-      "z":-1 + Math.random() * 2
+    id: id,
+    position: {
+      x: -1 + Math.random() * 2,
+      y: -1 + Math.random() * 2,
+      z: -1 + Math.random() * 2,
     },
-    "tilt": -25 + Math.random() * 50,
-    "yaw": -25 + Math.random() * 50,
-    "roll": -25 + Math.random() * 50,
-    "leftEyebrow": Math.random() * 1.0,
-    "rightEyebrow": Math.random() * 1.0,
-    "mouth":{
-      "height": Math.random() * 1.0,
-      "width": Math.random() * 1.0
+    tilt: -25 + Math.random() * 50,
+    yaw: -25 + Math.random() * 50,
+    roll: -25 + Math.random() * 50,
+    leftEyebrow: Math.random() * 1.0,
+    rightEyebrow: Math.random() * 1.0,
+    mouth: {
+      height: Math.random() * 1.0,
+      width: Math.random() * 1.0,
     },
-    "expressions":{
-      "smile": 0
-    }
+    expressions: {
+      smile: 0,
+    },
   }
 }
 
-let useSocket = true;
+let useSocket = true
 global.debugFaces = () => {
-  useSocket = false;
+  useSocket = false
 
-  for(var i=0; i<40; i++) createFace(scene)(createMockFace(`face${i}`), i);
+  for (var i = 0; i < 40; i++) createFace(scene)(createMockFace(`face${i}`), i)
 
   setInterval(() => {
-    for(var i=0; i<40; i+=4) createFace(scene)(createMockFace(`face${i}`), i);
-  }, 600);
+    for (var i = 0; i < 40; i += 4)
+      createFace(scene)(createMockFace(`face${i}`), i)
+  }, 600)
   setInterval(() => {
-    for(var i=1; i<40; i+=4) createFace(scene)(createMockFace(`face${i}`), i);
-  }, 700);
+    for (var i = 1; i < 40; i += 4)
+      createFace(scene)(createMockFace(`face${i}`), i)
+  }, 700)
   setInterval(() => {
-    for(var i=2; i<40; i+=4) createFace(scene)(createMockFace(`face${i}`), i);
-  }, 800);
+    for (var i = 2; i < 40; i += 4)
+      createFace(scene)(createMockFace(`face${i}`), i)
+  }, 800)
   setInterval(() => {
-    for(var i=3; i<40; i+=4) createFace(scene)(createMockFace(`face${i}`), i);
-  }, 900);
-};
+    for (var i = 3; i < 40; i += 4)
+      createFace(scene)(createMockFace(`face${i}`), i)
+  }, 900)
+}
 
 socket.on('faces', (faces) => {
   if (!AFRAME.scenes.length) {
     return
   }
   if (!useSocket) {
-    return;
+    return
   }
   faces.forEach(createFace(scene))
 })
@@ -181,7 +210,8 @@ const startStream = async (video) => {
 }
 
 setTimeout(() => {
- if (confirm(`Welcome to Viroom!
+  if (
+    confirm(`Welcome to Viroom!
  This is a made in #hackthecrisis to help conferences, meetings, webinars, theaters and others to get better contact with the audience. 
 
  If you are on mobile the expericence is better if you press Cancel on the following question, you can still look around.
@@ -191,12 +221,13 @@ setTimeout(() => {
  
  Privacy: No data is being saved on the server and all data is encrypted.
  
- Take a seat!`)) {
+ Take a seat!`)
+  ) {
     startStream()
   }
 }, 5000)
 
-const camera1 = document.querySelector('#first-camera');
-const camerarig1 = document.querySelector('#first-camera-rig');
-camerarig1.object3D.lookAt(3, 1, 6);
-camerarig1.object3D.position.set(4, 1.5, 1);
+const camera1 = document.querySelector('#first-camera')
+const camerarig1 = document.querySelector('#first-camera-rig')
+camerarig1.object3D.lookAt(3, 1, 6)
+camerarig1.object3D.position.set(4, 1.5, 1)
