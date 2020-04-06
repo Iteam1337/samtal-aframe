@@ -46,7 +46,6 @@ AFRAME.registerComponent('face', {
     this.mhLerp = new Lerpomato()
     this.isCurrentUser =
       this.data.userId === localStorage.getItem('viroom/userid')
-    this.currentUserColor = '#4FD1C5'
 
     this.lastmodel = ''
   },
@@ -96,14 +95,13 @@ AFRAME.registerComponent('face', {
     }
 
     const headEl = this.el.getElementsByClassName('thehead')[0]
+    const markerEl = this.el.getElementsByClassName('themarker')[0]
+
+    if (this.isCurrentUser && markerEl) {
+      markerEl.setAttribute('visible', 'true')
+    }
 
     if (headEl) {
-      const headElColor = headEl.getAttribute('color')
-
-      if (this.isCurrentUser && headElColor !== this.currentUserColor) {
-        headEl.setAttribute('color', this.currentUserColor)
-      }
-
       headEl.object3D.setRotationFromEuler(
         new THREE.Euler(
           THREE.Math.degToRad(yawValue),

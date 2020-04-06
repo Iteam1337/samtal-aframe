@@ -32,6 +32,15 @@
         <script id="face" type="html">
           <a-entity>
             <a-entity position="0 0.6 0" class="theneck">
+            <a-entity class="themarker" visible="false">
+            <a-cone material="color: #48BB78"
+            radius-bottom="0.1" width="0.15"
+            height="0.15" radius-top="0" position="0 0.55 0"></a-cone>
+            <a-cone material="color: #48BB78"
+            radius-bottom="0.1" width="0.15"
+            height="0.15" radius-top="0"
+            rotation="0 0 -180" position="0 0.4 0"></a-cone>
+            </a-entity>
               <a-sphere scale="0.2 0.2 0.2" position="0 0 0" color="#F6E05E" class="thehead" shadow segments-height="15" segments-width="15">
                 <a-box
                   class="leftEyebrow"
