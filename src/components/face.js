@@ -44,6 +44,9 @@ AFRAME.registerComponent('face', {
     this.pzLerp = new Lerpomato()
     this.mwLerp = new Lerpomato()
     this.mhLerp = new Lerpomato()
+    this.isCurrentUser =
+      this.data.userId === localStorage.getItem('viroom/userid')
+    this.currentUserColor = '#4FD1C5'
 
     this.lastmodel = ''
   },
@@ -96,12 +99,9 @@ AFRAME.registerComponent('face', {
 
     if (headEl) {
       const headElColor = headEl.getAttribute('color')
-      const currentUserColor = '#4FD1C5'
-      const isCurrentUser =
-        this.data.userId === localStorage.getItem('viroom/userid')
 
-      if (isCurrentUser && headElColor !== currentUserColor) {
-        headEl.setAttribute('color', currentUserColor)
+      if (this.isCurrentUser && headElColor !== this.currentUserColor) {
+        headEl.setAttribute('color', this.currentUserColor)
       }
 
       headEl.object3D.setRotationFromEuler(
@@ -115,4 +115,3 @@ AFRAME.registerComponent('face', {
     }
   },
 })
-
