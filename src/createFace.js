@@ -1,7 +1,7 @@
 import './mouth'
 
 export const createFace = (scene) => (model, i) => {
-  const id = `face-${i}`
+  const id = `face-${model.userId}`
   delete model.id // otherwise it will create millions of new elements
   let faceEl = document.getElementById(id)
 

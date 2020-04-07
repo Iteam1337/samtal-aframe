@@ -1,0 +1,22 @@
+.btn {
+  appearance: none;
+  background: none;
+  border: 0;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn--camera-toggle {
+  background-color: #428cfb;
+  border-radius: 100%;
+  bottom: 32px;
+  box-shadow: 0 0 10px hsl(216, 96%, 40%);
+  color: #fff;
+  cursor: pointer;
+  height: 48px;
+  left: 32px;
+  position: fixed;
+  width: 48px;
+}
