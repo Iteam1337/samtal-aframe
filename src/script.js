@@ -1,5 +1,7 @@
 import 'babel-polyfill' // need this for some reason
 
+import './styles.css'
+import './camera'
 import cuid from 'cuid'
 import minecraftCube from '../assets/minecraft.png'
 import sceneBackground from '../assets/cineroom.gltf'
@@ -227,7 +229,7 @@ setTimeout(() => {
   }
 }, 5000)
 
-const camera1 = document.querySelector('#first-camera')
+const camera1 = document.querySelector('#camera-first')
 const camerarig1 = document.querySelector('#first-camera-rig')
 camerarig1.object3D.lookAt(3, 1, 6)
 camerarig1.object3D.position.set(4, 1.5, 1)
