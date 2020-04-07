@@ -24,6 +24,8 @@ AFRAME.registerComponent('face', {
     expressions: {
       smile: { type: 'number' },
     },
+    leftEye: { type: 'number' },
+    rightEye: { type: 'number' },
     leftEyebrow: { type: 'number' },
     rightEyebrow: { type: 'number' },
     mouth: {
