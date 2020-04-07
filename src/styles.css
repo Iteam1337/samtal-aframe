@@ -20,3 +20,16 @@
   position: fixed;
   width: 48px;
 }
+
+.btn--emoji {
+  background-color: #428cfb;
+  border-radius: 100%;
+  bottom: 32px;
+  box-shadow: 0 0 10px hsl(216, 96%, 40%);
+  color: red;
+  cursor: pointer;
+  height: 48px;
+  left: 88px;
+  position: fixed;
+  width: 48px;
+}

@@ -2,6 +2,7 @@ import 'babel-polyfill' // need this for some reason
 
 import './styles.css'
 import './camera'
+import './emoji'
 import cuid from 'cuid'
 import minecraftCube from '../assets/minecraft.png'
 import sceneBackground from '../assets/cineroom.gltf'
