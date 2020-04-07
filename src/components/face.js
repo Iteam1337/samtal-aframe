@@ -102,6 +102,14 @@ AFRAME.registerComponent('face', {
     }
 
     if (headEl) {
+      if (this.data.expressions.smile > 12) {
+        headEl.setAttribute('color', '#00ff00')
+      } else if (this.data.expressions.smile < 6) {
+        headEl.setAttribute('color', '#ff0000')
+      } else {
+        headEl.setAttribute('color', '#F6E05E')
+      }
+
       headEl.object3D.setRotationFromEuler(
         new THREE.Euler(
           THREE.Math.degToRad(yawValue),
