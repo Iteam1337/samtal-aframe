@@ -46,7 +46,9 @@ AFRAME.registerComponent('face', {
   tick: function (time, timeDelta) {
     // update all interpolators
     const leftEyebrowValue = this.leftEyebrowLerp.filter(this.data.leftEyebrow)
-    const rightEyebrowValue = this.rightEyebrowLerp.filter(this.data.rightEyebrow)
+    const rightEyebrowValue = this.rightEyebrowLerp.filter(
+      this.data.rightEyebrow
+    )
     const rollValue = this.rollLerp.filter(this.data.roll)
     const yawValue = this.yawLerp.filter(this.data.yaw)
     const tiltValue = this.tiltLerp.filter(this.data.tilt)
@@ -94,7 +96,7 @@ AFRAME.registerComponent('face', {
       headEl.object3D.setRotationFromEuler(
         new THREE.Euler(
           THREE.Math.degToRad(yawValue),
-          THREE.Math.degToRad(tiltValue),
+          THREE.Math.degToRad(tiltValue * 1.75),
           THREE.Math.degToRad(rollValue),
           'ZYX'
         )
