@@ -188,11 +188,14 @@ socket.on('faces', (faces) => {
   if (!useSocket) {
     return
   }
+
   faces.forEach(createFace(scene))
 })
 
 const startStream = async (video) => {
   try {
+    document.getElementById('btn-emoji').style.display = 'block'
+
     const video = document.querySelector('#video')
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'user' },

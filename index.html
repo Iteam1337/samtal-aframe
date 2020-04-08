@@ -29,12 +29,13 @@
         <a-asset-item id="room" src="./cineroom.gltf"></a-asset-item>
 
         <a-asset-item id="logo" src="./logo.png"></a-asset-item>
+        <img id="heart" src="./assets/heart.png">
 
         <script id="emoji-heart" type="html">
           <a-entity>
-            <a-box material="src: heart.png" depth="0.0001" height="0.1" width="0.1" position="0 1 0" opacity="1" animation="property: position;
-            to: 0 2.5
-            0; dur: 2000; easing: linear; loop: false" animation__2="property:
+            <a-box material="color: transparent; src: #heart" transparent="true"
+            depth="0.0001" height="0.25" width="0.25" position="0 1 0" opacity="1" animation="property: position;
+            to: 0 2.5 0; dur: 3000; easing: linear; loop: false" animation__2="property:
             opacity; to: 0; dur: 2000; easing: easeInOutQuad; loop:
             false"></a-box>
           </a-entity>
@@ -131,8 +132,7 @@
 </svg>
     </button>
 
-    <button id="btn-emoji" class="btn btn--emoji"
-      data-state="audience"><svg xmlns="http://www.w3.org/2000/svg" height="20"
+    <button id="btn-emoji" class="btn btn--emoji" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" height="20"
       width="20" viewBox="0 0
         20 20"><path d="M10 3.22l-.61-.6a5.5 5.5 0 0 0-7.78 7.77L10
         18.78l8.39-8.4a5.5 5.5 0 0 0-7.78-7.77l-.61.61z" fill="currentColor"/></svg></button>

@@ -2,6 +2,12 @@
   appearance: none;
   background: none;
   border: 0;
+  transition: opacity 150ms ease-in-out;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
 }
 
 .btn:focus {

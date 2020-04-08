@@ -3,12 +3,12 @@ const emojiBtn = document.getElementById('btn-emoji')
 
 if (emojiBtn) {
   emojiBtn.addEventListener('click', () => {
-    const emoji = {
+    emojiBtn.setAttribute('disabled', true)
+
+    socket.emit('emoji', {
       id: localStorage.getItem('viroom/userid'),
       emoji: 'heart',
-    }
-
-    socket.emit('emoji', emoji)
+    })
   })
 }
 
@@ -33,8 +33,9 @@ socket.on('emojis', (emojis) => {
 
     setTimeout(() => {
       if (emojiEl) {
+        emojiBtn.removeAttribute('disabled')
         emojiEl.remove()
       }
-    }, 2000)
+    }, 3100)
   })
 })
