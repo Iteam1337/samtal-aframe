@@ -21,13 +21,11 @@ AFRAME.registerComponent('face', {
     tilt: { type: 'number' },
     roll: { type: 'number' },
     yaw: { type: 'number' },
-    expressions: {
-      smile: { type: 'number' },
-    },
     leftEye: { type: 'number' },
     rightEye: { type: 'number' },
     leftEyebrow: { type: 'number' },
     rightEyebrow: { type: 'number' },
+    mood: { type: 'string' },
     mouth: {
       height: { type: 'number' },
       width: { type: 'number' },
@@ -102,15 +100,15 @@ AFRAME.registerComponent('face', {
     if (this.isCurrentUser && markerEl) {
       markerEl.setAttribute('visible', 'true')
     }
-
+    console.log(this.data.mood)
     if (headEl) {
-      if (this.data.expressions.smile > 12) {
-        headEl.setAttribute('color', '#00ff00')
-      } else if (this.data.expressions.smile < 6) {
-        headEl.setAttribute('color', '#ff0000')
-      } else {
-        headEl.setAttribute('color', '#F6E05E')
-      }
+      // if (this.data.expressions.smile > 12) {
+      //   headEl.setAttribute('color', '#00ff00')
+      // } else if (this.data.expressions.smile < 6) {
+      //   headEl.setAttribute('color', '#ff0000')
+      // } else {
+      //   headEl.setAttribute('color', '#F6E05E')
+      // }
 
       headEl.object3D.setRotationFromEuler(
         new THREE.Euler(

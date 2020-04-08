@@ -20,6 +20,13 @@ import {
   dist,
   lerpclamp,
 } from './helpers.js'
+import {
+  nets,
+  loadFaceExpressionModel,
+  detectSingleFace,
+  SsdMobilenetv1Options,
+  TinyFaceDetectorOptions,
+} from 'face-api.js'
 
 const room = document.querySelector('#room')
 const scene = document.querySelector('a-scene')
@@ -30,6 +37,38 @@ const userId = 'viroom/userid'
 
 if (!localStorage.getItem(userId)) {
   localStorage.setItem(userId, cuid())
+}
+
+const SSD_MOBILENETV1 = 'ssd_mobilenetv1'
+const TINY_FACE_DETECTOR = 'tiny_face_detector'
+
+let selectedFaceDetector = SSD_MOBILENETV1
+
+// ssd_mobilenetv1 options
+let minConfidence = 0.5
+
+// tiny_face_detector options
+let inputSize = 512
+let scoreThreshold = 0.5
+
+const getFaceDetectorOptions = () => {
+  return selectedFaceDetector === SSD_MOBILENETV1
+    ? new SsdMobilenetv1Options({ minConfidence })
+    : new TinyFaceDetectorOptions({ inputSize, scoreThreshold })
+}
+
+const findBestExpression = (expressions) => {
+  let bestExpression
+  let bestExpressionValue = 0
+
+  Object.keys(expressions).forEach((expressionName) => {
+    if (expressions[expressionName] > bestExpressionValue) {
+      bestExpressionValue = expressions[expressionName]
+      bestExpression = expressionName
+    }
+  })
+
+  return bestExpression
 }
 
 const socket = io()
@@ -43,7 +82,7 @@ let movingAverageCenter = {
 const detectFace = async (model, video, emitFace) => {
   const faces = await Promise.race([model.estimateFaces(video), timeout(500)])
   faces &&
-    faces.forEach((face, i) => {
+    faces.forEach(async (face, i) => {
       const { annotations } = face
 
       const center = getPositions(annotations.midwayBetweenEyes[0])
@@ -80,6 +119,12 @@ const detectFace = async (model, video, emitFace) => {
         1
       )
 
+      let options = getFaceDetectorOptions()
+      const detections = await detectSingleFace(
+        video,
+        options
+      ).withFaceExpressions()
+
       const strippedFace = {
         id: i,
         userId: localStorage.getItem(userId),
@@ -91,6 +136,9 @@ const detectFace = async (model, video, emitFace) => {
         rightEye: diff(center, getPositions(annotations.rightEyeUpper0[3])),
         leftEyebrow: leftEyebrowPosition,
         rightEyebrow: rightEyebrowPosition,
+        mood: detections
+          ? findBestExpression(detections.expressions)
+          : 'neutral',
         mouth: {
           position: diff(
             center,
@@ -110,12 +158,7 @@ const detectFace = async (model, video, emitFace) => {
         },
       }
 
-      const faceWithExpressions = {
-        ...strippedFace,
-        expressions: calculateExpressions(strippedFace),
-      }
-
-      emitFace(faceWithExpressions)
+      emitFace(strippedFace)
     })
 
   return detectFace(model, video, emitFace)
@@ -127,6 +170,11 @@ async function main() {
   console.log('loading models...')
   const model = await facemesh.load()
   console.log('finished loading models...')
+
+  await nets.ssdMobilenetv1.load('/weights/')
+  console.log('face-api: lodaded model')
+  await loadFaceExpressionModel('/weights/')
+  console.log('face-api: lodaded weights')
 
   detectFace(model, video, (face) => {
     socket.emit('face', face)
@@ -200,10 +248,12 @@ const startStream = async (video) => {
     if (!stream) {
       throw new Error('You need to allow video to use this service.')
     }
+
     console.log('setting video to stream')
     video.srcObject = stream
     video.onloadeddata = () => main()
   } catch (err) {
+    console.error(err)
     alert(
       'Sorry. We got an error. Please make sure you use Google Chrome. You can still walk around in the room. ' +
         err.message
