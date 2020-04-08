@@ -1,17 +1,4 @@
-const Lerpomato = (a = undefined, b = undefined) => {
-  if (b === undefined) b = 0.01 + 0.02 * Math.random()
-  if (a === undefined) a = 0.92 + 0.03 * Math.random()
-  var c = 0
-  var v = 0
-  return {
-    tick: (newvalue) => {
-      v *= a
-      v += b * (newvalue - c)
-      c += v
-      return c
-    },
-  }
-}
+import KalmanFilter from 'kalmanjs'
 
 AFRAME.registerComponent('face', {
   schema: {
@@ -36,16 +23,16 @@ AFRAME.registerComponent('face', {
 
   init: function (data) {
     console.log('init face', this.data)
-    this.leftEyebrowLerp = new Lerpomato()
-    this.rightEyebrowLerp = new Lerpomato()
-    this.rollLerp = new Lerpomato()
-    this.yawLerp = new Lerpomato()
-    this.tiltLerp = new Lerpomato()
-    this.pxLerp = new Lerpomato()
-    this.pyLerp = new Lerpomato()
-    this.pzLerp = new Lerpomato()
-    this.mwLerp = new Lerpomato()
-    this.mhLerp = new Lerpomato()
+    this.leftEyebrowLerp = new KalmanFilter()
+    this.rightEyebrowLerp = new KalmanFilter()
+    this.rollLerp = new KalmanFilter()
+    this.yawLerp = new KalmanFilter()
+    this.tiltLerp = new KalmanFilter()
+    this.pxLerp = new KalmanFilter()
+    this.pyLerp = new KalmanFilter()
+    this.pzLerp = new KalmanFilter()
+    this.mwLerp = new KalmanFilter()
+    this.mhLerp = new KalmanFilter()
     this.isCurrentUser =
       this.data.userId === localStorage.getItem('viroom/userid')
 
@@ -58,16 +45,16 @@ AFRAME.registerComponent('face', {
 
   tick: function (time, timeDelta) {
     // update all interpolators
-    const leftEyebrowValue = this.leftEyebrowLerp.tick(this.data.leftEyebrow)
-    const rightEyebrowValue = this.rightEyebrowLerp.tick(this.data.rightEyebrow)
-    const rollValue = this.rollLerp.tick(this.data.roll)
-    const yawValue = this.yawLerp.tick(this.data.yaw)
-    const tiltValue = this.tiltLerp.tick(this.data.tilt)
-    const pxValue = this.pxLerp.tick(this.data.position.x)
-    const pyValue = this.pyLerp.tick(this.data.position.y)
-    const pzValue = this.pzLerp.tick(this.data.position.z)
-    const mwValue = this.pzLerp.tick(this.data.mouth.width)
-    const mhValue = this.pzLerp.tick(this.data.mouth.height)
+    const leftEyebrowValue = this.leftEyebrowLerp.filter(this.data.leftEyebrow)
+    const rightEyebrowValue = this.rightEyebrowLerp.filter(this.data.rightEyebrow)
+    const rollValue = this.rollLerp.filter(this.data.roll)
+    const yawValue = this.yawLerp.filter(this.data.yaw)
+    const tiltValue = this.tiltLerp.filter(this.data.tilt)
+    const pxValue = this.pxLerp.filter(this.data.position.x)
+    const pyValue = this.pyLerp.filter(this.data.position.y)
+    const pzValue = this.pzLerp.filter(this.data.position.z)
+    const mwValue = this.pzLerp.filter(this.data.mouth.width)
+    const mhValue = this.pzLerp.filter(this.data.mouth.height)
 
     const mouthEl = this.el.getElementsByClassName('mouth')[0]
 
