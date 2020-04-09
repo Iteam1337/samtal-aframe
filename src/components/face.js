@@ -68,12 +68,12 @@ AFRAME.registerComponent('face', {
     const leftEyebrowEl = this.el.getElementsByClassName('leftEyebrow')[0]
 
     if (leftEyebrowEl) {
+      // leftEyebrowEl.object3D.position.y = leftEyebrowValue * 1.75
+      leftEyebrowEl.object3D.position.y = leftEyebrowValue * 0.75 + 0.45
       leftEyebrowEl.object3D.setRotationFromEuler(
         new THREE.Euler(
           THREE.Math.degToRad(yawValue),
-          THREE.Math.degToRad(
-            (leftEyebrowEl.object3D.position.y = leftEyebrowValue * 1.75)
-          ),
+          THREE.Math.degToRad(),
           THREE.Math.degToRad(rollValue),
           'ZYX'
         )
@@ -83,12 +83,11 @@ AFRAME.registerComponent('face', {
     const rightEyebrowEl = this.el.getElementsByClassName('rightEyebrow')[0]
 
     if (rightEyebrowEl) {
+      rightEyebrowEl.object3D.position.y = rightEyebrowValue * 0.75 + 0.45
       rightEyebrowEl.object3D.setRotationFromEuler(
         new THREE.Euler(
           THREE.Math.degToRad(yawValue),
-          THREE.Math.degToRad(
-            (rightEyebrowEl.object3D.position.y = rightEyebrowValue * 1.75)
-          ),
+          THREE.Math.degToRad(),
           THREE.Math.degToRad(rollValue),
           'ZYX'
         )
