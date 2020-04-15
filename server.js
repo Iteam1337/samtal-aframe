@@ -22,24 +22,20 @@ let emojis = {}
 
 io.on('connection', (client) => {
   client.on('face', (face) => {
+    face.id = client.id + '_' + face.id
     allFaces[client.id + '_' + face.id] = face
+    io.volatile.emit('face', face)
   })
 
   client.on('emoji', (emoji) => {
     emojis[`${client.id}_${emoji.id}`] = emoji
   })
-
+/*
   setInterval(() => {
     if (!Object.keys(allFaces).length) return
 
-    io.volatile.emit(
-      'faces',
-      Object.values(allFaces).reduce(
-        (result, faces) => result.concat(faces),
-        []
-      )
-    )
-  }, 50)
+    io.volatile.emit('faces', Object.values(allFaces))
+  }, 50)*/
 
   setInterval(() => {
     io.volatile.emit('emojis', Object.values(emojis))
