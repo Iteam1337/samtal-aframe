@@ -20,6 +20,17 @@ app.get('/', (req, res) =>
 const allFaces = {}
 let emojis = {}
 
+setInterval(() => {
+  if (!Object.keys(allFaces).length) return
+
+  io.volatile.emit('faces', Object.values(allFaces))
+}, 50)
+
+setInterval(() => {
+  io.volatile.emit('emojis', Object.values(emojis))
+  emojis = {}
+}, 1000)
+
 io.on('connection', (client) => {
   client.on('face', (face) => {
     face.id = client.id + '_' + face.id
@@ -29,16 +40,6 @@ io.on('connection', (client) => {
   client.on('emoji', (emoji) => {
     emojis[`${client.id}_${emoji.id}`] = emoji
   })
-  setInterval(() => {
-    if (!Object.keys(allFaces).length) return
-
-    io.volatile.emit('faces', Object.values(allFaces))
-  }, 50)
-
-  setInterval(() => {
-    io.volatile.emit('emojis', Object.values(emojis))
-    emojis = {}
-  }, 1000)
 
   client.on('disconnect', (reason) => {
     Object.keys(allFaces)
