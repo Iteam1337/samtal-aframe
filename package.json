@@ -19,6 +19,10 @@
   },
   "homepage": "https://github.com/Iteam1337/samtal-aframe#readme",
   "dependencies": {
+    "@tensorflow-models/facemesh": "0.0.1",
+    "@tensorflow/tfjs-backend-wasm": "^1.7.2",
+    "@tensorflow/tfjs-converter": "^1.7.2",
+    "@tensorflow/tfjs-core": "^1.7.2",
     "babel-polyfill": "^6.26.0",
     "cuid": "2.1.8",
     "express": "^4.17.1",

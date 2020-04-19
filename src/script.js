@@ -1,11 +1,21 @@
 import 'babel-polyfill' // need this for some reason
+import * as facemesh from '@tensorflow-models/facemesh'
+
+import * as tf from '@tensorflow/tfjs-core'
+import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm'
+// TODO(annxingyuan): read version from tfjsWasm directly once
+// https://github.com/tensorflow/tfjs/pull/2819 is merged.
+import {version} from '@tensorflow/tfjs-backend-wasm/dist/version'
+
+tfjsWasm.setWasmPath(
+    `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${
+        version}/dist/tfjs-backend-wasm.wasm`)
+
 
 import './styles.css'
 import './camera'
 import './emoji'
 import cuid from 'cuid'
-import minecraftCube from '../assets/minecraft.png'
-import sceneBackground from '../assets/cineroom.gltf'
 import { createFace } from './createFace'
 import {
   pick,
@@ -24,8 +34,6 @@ import {
 
 const room = document.querySelector('#room')
 const scene = document.querySelector('a-scene')
-
-room.setAttribute('src', sceneBackground)
 
 const userId = 'viroom/userid'
 
@@ -118,14 +126,14 @@ const detectFace = async (model, video, emitFace) => {
 
       emitFace(faceWithExpressions)
     })
-
-  return detectFace(model, video, emitFace)
+  
+  requestAnimationFrame(() => detectFace(model, video, emitFace))
 }
 
 async function main() {
   const video = document.querySelector('#video')
-  await tf.ready()
   console.log('loading models...')
+  await tf.setBackend('wasm')
   const model = await facemesh.load()
   console.log('finished loading models...')
 
