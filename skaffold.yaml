@@ -5,7 +5,13 @@ metadata:
 build:
   artifacts:
   - image: irony/stage
+    context: node
+    sync:
+      infer:
+      - 'index.html'
+      - 'src/**/*.js'
 deploy:
   kubectl:
     manifests:
     - k8s/stage-service.yaml
+    - k8s/ghost-ingress.yaml

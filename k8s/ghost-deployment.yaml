@@ -42,7 +42,7 @@ spec:
               key: mariadb-password
               name: samtal-ghost-mariadb
         - name: GHOST_HOST
-          value: samtal.io/
+          value: vrmeet.io/
         - name: GHOST_PROTOCOL
           value: http
         - name: GHOST_PORT_NUMBER
@@ -65,7 +65,7 @@ spec:
           httpGet:
             httpHeaders:
             - name: Host
-              value: samtal.io/
+              value: vrmeet.io/
             path: /
             port: http
             scheme: HTTP
@@ -83,7 +83,7 @@ spec:
           httpGet:
             httpHeaders:
             - name: Host
-              value: samtal.io/
+              value: vrmeet.io/
             path: /
             port: http
             scheme: HTTP

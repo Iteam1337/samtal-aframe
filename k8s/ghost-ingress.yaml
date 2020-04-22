@@ -4,6 +4,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
   generation: 1
   labels:
     app: samtal-ghost
@@ -18,9 +19,16 @@ spec:
           serviceName: samtal-ghost
           servicePort: http
         path: /
+  - host: vrmeet.io
+    http:
+      paths:
+      - backend:
+          serviceName: samtal-ghost
+          servicePort: http
+        path: /
   tls:
   - hosts:
     - samtal.io
+    - vrmeet.io
     secretName: samtal-ghost-prod-tls
-status:
-  loadBalancer: {}
+

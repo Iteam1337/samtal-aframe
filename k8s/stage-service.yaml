@@ -40,6 +40,7 @@ spec:
   - hosts:
     - stage.snowflake.cash
     - stage.samtal.io
+    - stage.vrmeet.io
     secretName: stage-prod-tls
   rules:
   - host: stage.snowflake.cash
@@ -49,6 +50,12 @@ spec:
           serviceName: stage
           servicePort: 8000
   - host: stage.samtal.io
+    http:
+      paths:
+      - backend:
+          serviceName: stage
+          servicePort: 8000
+  - host: stage.vrmeet.io
     http:
       paths:
       - backend:

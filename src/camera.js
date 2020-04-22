@@ -11,12 +11,6 @@ function toggleCamera(rig) {
 
 if (cameraBtn) {
   cameraBtn.addEventListener('click', () => {
-    const firstCamera = document.getElementById('first-camera')
-
-    if (firstCamera) {
-      firstCamera.remove()
-    }
-
     if (cameraBtn.dataset.state === 'audience') {
       toggleCamera(audienceCamera)
       cameraBtn.dataset.state = 'presentation'
@@ -44,3 +38,4 @@ if (cameraBtn) {
     }
   })
 }
+

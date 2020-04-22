@@ -31,6 +31,7 @@ import {
   dist,
   lerpclamp,
 } from './helpers.js'
+import { mod } from '@tensorflow/tfjs-core'
 
 const room = document.querySelector('#room')
 const scene = document.querySelector('a-scene')
@@ -50,7 +51,7 @@ let movingAverageCenter = {
 }
 
 const detectFace = async (model, video, emitFace) => {
-  const faces = await Promise.race([model.estimateFaces(video), timeout(500)])
+  const faces = await model.estimateFaces(video)
   faces &&
     faces.forEach((face, i) => {
       const { annotations } = face
@@ -126,14 +127,15 @@ const detectFace = async (model, video, emitFace) => {
 
       emitFace(faceWithExpressions)
     })
-  
-  requestAnimationFrame(() => detectFace(model, video, emitFace))
+  requestAnimationFrame(() => {
+    detectFace(model, video, emitFace)
+  })
 }
 
 async function main() {
   const video = document.querySelector('#video')
   console.log('loading models...')
-  await tf.setBackend('wasm')
+  await tf.ready()
   const model = await facemesh.load()
   console.log('finished loading models...')
 
@@ -223,25 +225,65 @@ const startStream = async (video) => {
   }
 }
 
+
+const startJitsi = (roomName) => {
+  JitsiMeetJS.init()
+  var connection = new JitsiMeetJS.JitsiConnection(null, null, {
+    hosts: {
+      domain: 'beta.meet.jit.si',
+      muc: 'conference.beta.meet.jit.si', // FIXME: use XEP-0030
+      focus: 'focus.beta.meet.jit.si',
+    },
+    bosh:'https://beta.meet.jit.si/http-bind', 
+    clientNode: 'http://jitsi.org/jitsimeet'
+  })
+  connection.connect();
+  connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED, () => {
+    console.log('Jitsi connection established')
+    const room = connection.initJitsiConference(roomName, {
+      // add options here
+    })
+    function onLocalTracks(tracks) {
+      localTracks = tracks
+      localTracks.forEach((track, i) => {
+        console.log('track', track)
+        if (track.getType() === 'video') {
+          const video = document.createElement('video')
+          video.id = `localVideo${i}`
+          document.body.appendChild(video)
+          document.getElementById('bigscreen').src = '#' + video.id
+          track.attach(video)
+        } else {
+          const audio = document.createElement('audio')
+          audio.id = `localAudio${i}`
+          document.body.appendChild(audio)
+          track.attach(audio);
+        }
+        if (isJoined) {
+            room.addTrack(track);
+        }
+      })
+    }
+    console.log('Creating local tracks...')
+    JitsiMeetJS.createLocalTracks().then(onLocalTracks);
+  })
+}
+
+
 setTimeout(() => {
   if (
-    confirm(`Welcome to Viroom!
- This is a made in #hackthecrisis to help conferences, meetings, webinars, theaters and others to get better contact with the audience. 
+    confirm(`Welcome to VR meet!
 
- If you are on mobile the expericence is better if you press Cancel on the following question, you can still look around.
- 
- Would you like to share your facial expressions with this service?
- (It will take a few seconds before your avatar pops up...)
- 
- Privacy: No data is being saved on the server and all data is encrypted.
- 
- Take a seat!`)
-  ) {
+This is our public hall. Feel free to test the service here.
+  
+Would you like to share your facial expressions with this service?
+We take your privacy seriously, read more at vrmeet.io/tech.
+
+Take a seat and don't forget to invite your friends!`)
+) {
     startStream()
+    startJitsi('stage.vrmeet.io')
   }
-}, 5000)
+}, 1000)
 
-const camera1 = document.querySelector('#camera-first')
-const camerarig1 = document.querySelector('#first-camera-rig')
-camerarig1.object3D.lookAt(3, 1, 6)
-camerarig1.object3D.position.set(4, 1.5, 1)
+

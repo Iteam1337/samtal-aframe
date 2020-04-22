@@ -2,10 +2,12 @@
   <head>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/facemesh"></script>
     <script src="https://unpkg.com/aframe-orbit-controls@1.2.0/dist/aframe-orbit-controls.min.js"></script>
     <script src="https://unpkg.com/aframe-supercraft-loader@1.1.3/dist/aframe-supercraft-loader.js"></script>
     <script src="https://unpkg.com/aframe-template-component@^3.1.1/dist/aframe-template-component.min.js"></script>
+    <!-- for jitsi-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.slim.min.js"></script> 
+    <script src="https://meet.jit.si/libs/lib-jitsi-meet.min.js"></script>
     <meta name="apple-mobile-web-app-capable" content="yes">
   </head>
   <body>
@@ -15,10 +17,6 @@
       <a-entity id="spot1target" rotation="-80 0 0" position="-1 7 0">
         <a-entity light="type: spot; color: #EEF; intensity: 1.0; penumbra: 1.0; castShadow: true; shadowCameraVisible: false; shadowMapWidth: 2048; shadowMapHeight: 2048; shadowBias: -0.001;" position="0 0 0">
         </a-entity>
-      </a-entity>
-
-      <a-entity id="first-camera-rig">
-          <a-entity id="first-camera" camera look-controls camera="fov: 40" wasd-controls></a-entity>
       </a-entity>
 
       <a-assets>
@@ -104,11 +102,8 @@
       <a-box position="-5.8 0.3 -7.2" material="src: assets/logo.png; roughness: 1; metalness: 0" shadow></a-box>
       <a-box position="4.0 0.1 -7.2" height="0.5" material="src: assets/iteam.jpg; repeat: 1 2; roughness: 1; metalness: 0" shadow></a-box>
       <a-box position="4.0 0.6 -7.2" height="0.5" material="src: assets/influera.jpg; repeat: 1 1; roughness: 1; metalness: 0" shadow></a-box>
+      <a-video src="#presentation" id="bigscreen" width="10" height="6.6" position="-0.5 4.5 -7.5"></a-video>
       <a-sky color="#000"></a-sky>
-      <a-entity id="camera-first" position="0.3 1.8 1" wasd-controls
-        look-controls camera="active: true">
-        <a-entity camera></a-entity>
-      </a-entity>
 
        <a-entity id="camera-audience" position="-2.3 1.7 -6" rotation="-10 180 0">
         <a-entity class="camera" camera="active: false" look-controls
@@ -116,17 +111,17 @@
       </a-entity> 
 
        <a-entity id="camera-presentation" position="-1.6 2.3 3">
-        <a-entity class="camera" camera="active: false" look-controls></a-entity>
+        <a-entity class="camera" camera="active: true" look-controls></a-entity>
       </a-entity> 
     </a-scene>
 
     <button id="camera-toggle" class="btn btn--camera-toggle"
-      data-state="audience">
+      data-state="presentation">
       <svg width="16" height="19" viewBox="0 0 16 19" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M8 9.25C10.4609 9.25 12.5 7.24609 12.5 4.75C12.5 2.28906 10.4609 0.25 8 0.25C5.50391 0.25 3.5 2.28906 3.5 4.75C3.5 7.24609 5.50391 9.25 8 9.25ZM11.1289 10.375H10.5312C9.75781 10.7617 8.91406 10.9375 8 10.9375C7.08594 10.9375 6.20703 10.7617 5.43359 10.375H4.83594C2.23438 10.375 0.125 12.5195 0.125 15.1211V16.5625C0.125 17.5117 0.863281 18.25 1.8125 18.25H14.1875C15.1016 18.25 15.875 17.5117 15.875 16.5625V15.1211C15.875 12.5195 13.7305 10.375 11.1289 10.375Z" fill="currentColor"/>
 </svg>
     </button>
-    <a href="https://samtal.io"><img id="logo" src="./assets/samtal.png" style="width: 90px; position: fixed; top: 15px; left: 10px;"></a>
+    <a href="https://vrmeet.io"><img id="logo" src="./assets/vrmeet-lowres.png" style="width: 90px; position: fixed; top: 15px; left: 10px;"></a>
 
     <button id="btn-emoji" class="btn btn--emoji" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" height="20"
       width="20" viewBox="0 0
@@ -134,11 +129,22 @@
         18.78l8.39-8.4a5.5 5.5 0 0 0-7.78-7.77l-.61.61z" fill="currentColor"/></svg></button>
 
     <video
+      id="presentation"
+      height="2"
+      width="2"
+      src="/assets/video.mp4"
+      style="position: fixed; bottom: 0; right: 0;"
+      autoplay
+      muted
+    ></video>
+      
+    <video
       id="video"
       height="200"
       width="200"
       style="position: fixed; bottom: 0; right: 0;"
       autoplay
+      playsinline
       muted
     ></video>
     <audio id="surprise" src="/sounds/aha.mp3"></audio>
