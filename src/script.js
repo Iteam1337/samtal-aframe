@@ -282,7 +282,7 @@ We take your privacy seriously, read more at vrmeet.io/tech.
 Take a seat and don't forget to invite your friends!`)
 ) {
     startStream()
-    startJitsi('stage.vrmeet.io')
+    // startJitsi('stage.vrmeet.io')
   }
 }, 1000)
 
