@@ -9,16 +9,9 @@ metadata:
   labels:
     app: samtal-ghost
   name: samtal-ghost
-  namespace: default
+  namespace: samtalio
 spec:
   rules:
-  - host: samtal.io
-    http:
-      paths:
-      - backend:
-          serviceName: samtal-ghost
-          servicePort: http
-        path: /
   - host: vrmeet.io
     http:
       paths:
@@ -28,7 +21,6 @@ spec:
         path: /
   tls:
   - hosts:
-    - samtal.io
     - vrmeet.io
     secretName: samtal-ghost-prod-tls
 

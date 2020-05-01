@@ -38,24 +38,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - stage.snowflake.cash
-    - stage.samtal.io
-    - stage.vrmeet.io
+    - demo.vrmeet.io
     secretName: stage-prod-tls
   rules:
-  - host: stage.snowflake.cash
-    http:
-      paths:
-      - backend:
-          serviceName: stage
-          servicePort: 8000
-  - host: stage.samtal.io
-    http:
-      paths:
-      - backend:
-          serviceName: stage
-          servicePort: 8000
-  - host: stage.vrmeet.io
+  - host: demo.vrmeet.io
     http:
       paths:
       - backend:
