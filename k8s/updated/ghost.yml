@@ -1,0 +1,158 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: ghost
+  name: ghost
+  namespace: samtalio
+spec:
+  replicas: 3
+  revisionHistoryLimit: 4
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ghost
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ghost
+    spec:
+      containers:
+      - name: ghost
+        image: docker.io/bitnami/ghost:3.12.1-debian-10-r0
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 300m
+            memory: 512Mi
+          limits: {}
+        livenessProbe:
+          failureThreshold: 6
+          httpGet:
+            httpHeaders:
+            - name: Host
+              value: vrmeet.io
+            path: /
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        readinessProbe:
+          failureThreshold: 6
+          httpGet:
+            httpHeaders:
+            - name: Host
+              value: vrmeet.io
+            path: /
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        env:
+        - name: ALLOW_EMPTY_PASSWORD
+          value: "yes"
+        - name: MARIADB_HOST
+          value: mariadb
+        - name: MARIADB_PORT_NUMBER
+          value: "3306"
+        - name: GHOST_DATABASE_NAME
+          value: bitnami_ghost
+        - name: GHOST_DATABASE_USER
+          value: bn_ghost
+        - name: GHOST_DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mariadb-password
+              name: mariadb
+        - name: GHOST_HOST
+          value: vrmeet.io
+        - name: GHOST_PROTOCOL
+          value: http
+        - name: GHOST_PORT_NUMBER
+          value: "80"
+        - name: GHOST_USERNAME
+          value: user@example.com
+        - name: GHOST_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: ghost-password
+              name: ghost
+        - name: GHOST_EMAIL
+          value: christian@landgren.nu
+        - name: BLOG_TITLE
+          value: User's Blog
+        ports:
+        - containerPort: 2368
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /bitnami/ghost
+          name: data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: gfs-ghost
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gfs-ghost
+  namespace: samtalio
+  annotations:
+    volume.beta.kubernetes.io/storage-class: glusterfs
+spec:
+  accessModes: [ReadWriteMany]
+  resources:
+    requests:
+      storage: 8Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: ghost
+  name: ghost
+  namespace: samtalio
+spec:
+  ports:
+  - name: http
+    nodePort: 32455
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: ghost
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/name: host
+  name: ghost
+  namespace: samtalio
+spec:
+  rules:
+  - host: samtal.io
+    http:
+      paths:
+      - backend:
+          serviceName: ghost
+          servicePort: http
+        path: /
+  - host: vrmeet.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ghost
+          servicePort: http
+  tls:
+  - hosts:
+    - samtal.io
+    - vrmeet.io
+    secretName: ghost-tls
+---

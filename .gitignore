@@ -2,3 +2,4 @@
 node_modules
 dist
 .cache
+k8s/updated/secrets
