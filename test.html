@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://threejs.org/build/three.js"></script>
+  <script src="https://threejs.org/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://threejs.org/examples/js/loaders/OBJLoader.js"></script>
+  <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+<script>
+let camera, scene, renderer, clock, lipr, lipl, head, jaw;
+
+init();
+animate();
+
+function init() {
+
+	camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.01, 10 );
+	camera.position.set( 2, 2, - 2 );
+	
+	clock = new THREE.Clock();
+
+	scene = new THREE.Scene();
+	scene.background = new THREE.Color( 0xffffff );
+
+  var light = new THREE.PointLight( 0xffffcc, 20, 51 );
+  light.position.set( -40, 10, 20 );
+  scene.add( light );
+
+  var light2 = new THREE.AmbientLight( 0x20202A, 20, 100 );
+  light2.position.set( -30, 1, 30 );
+  scene.add( light2 );
+
+  // model
+  new THREE.OBJLoader().load('assets/facemesh.obj', obj => {
+      obj.traverse(child => {
+          if (child instanceof THREE.Mesh) {
+              faceObj = new THREE.Mesh(child.geometry, new THREE.MeshLambertMaterial({ side: THREE.FrontSide, color: "blue" }));
+              scene.add(faceObj);
+          }
+      });
+  })
+
+	renderer = new THREE.WebGLRenderer( { antialias: true } );
+	renderer.setPixelRatio( window.devicePixelRatio );
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.body.appendChild( renderer.domElement );
+
+	window.addEventListener( 'resize', onWindowResize, false );
+
+	const controls = new THREE.OrbitControls( camera, renderer.domElement );
+	controls.target.set( 0, 1, 0 );
+	controls.update();
+
+}
+
+function onWindowResize() {
+
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize( window.innerWidth, window.innerHeight );
+
+}
+
+function animate() {
+
+	requestAnimationFrame( animate );
+	
+	const t = clock.getElapsedTime();
+
+	if ( jaw ) {
+		jaw.parent.position.y = Math.sin( t ) * 20
+  }
+  
+ 
+
+
+	renderer.render( scene, camera );
+
+}
+</script>
+</body>
+</html>

@@ -97,10 +97,13 @@ const detectFace = async (model, video, emitFace) => {
         tilt: baseTilt,
         roll: baseRoll,
         yaw: baseYaw,
+        //annotations: annotations,
         leftEye: diff(center, getPositions(annotations.leftEyeUpper0[3])),
         rightEye: diff(center, getPositions(annotations.rightEyeUpper0[3])),
         leftEyebrow: leftEyebrowPosition,
         rightEyebrow: rightEyebrowPosition,
+        leftCheek: diff(center, getPositions(annotations.leftCheek[0])),
+        rightCheek: diff(center, getPositions(annotations.rightCheek[0])),
         mouth: {
           position: diff(
             center,
@@ -144,58 +147,8 @@ async function main() {
   })
 }
 
-function createMockFace(id) {
-  return {
-    id: id,
-    position: {
-      x: -1 + Math.random() * 2,
-      y: -1 + Math.random() * 2,
-      z: -1 + Math.random() * 2,
-    },
-    tilt: -25 + Math.random() * 50,
-    yaw: -25 + Math.random() * 50,
-    roll: -25 + Math.random() * 50,
-    leftEyebrow: Math.random() * 1.0,
-    rightEyebrow: Math.random() * 1.0,
-    mouth: {
-      height: Math.random() * 1.0,
-      width: Math.random() * 1.0,
-    },
-    expressions: {
-      smile: 0,
-    },
-  }
-}
-
-let useSocket = true
-global.debugFaces = () => {
-  useSocket = false
-
-  for (var i = 0; i < 40; i++) createFace(scene)(createMockFace(`face${i}`), i)
-
-  setInterval(() => {
-    for (var i = 0; i < 40; i += 4)
-      createFace(scene)(createMockFace(`face${i}`), i)
-  }, 600)
-  setInterval(() => {
-    for (var i = 1; i < 40; i += 4)
-      createFace(scene)(createMockFace(`face${i}`), i)
-  }, 700)
-  setInterval(() => {
-    for (var i = 2; i < 40; i += 4)
-      createFace(scene)(createMockFace(`face${i}`), i)
-  }, 800)
-  setInterval(() => {
-    for (var i = 3; i < 40; i += 4)
-      createFace(scene)(createMockFace(`face${i}`), i)
-  }, 900)
-}
-
 socket.on('faces', (faces) => {
   if (!AFRAME.scenes.length) {
-    return
-  }
-  if (!useSocket) {
     return
   }
 
@@ -270,7 +223,7 @@ const startJitsi = (roomName) => {
 }
 
 
-setTimeout(() => {
+/*setTimeout(() => {
   if (
     confirm(`Welcome to VR meet!
 
@@ -285,5 +238,6 @@ Take a seat and don't forget to invite your friends!`)
     // startJitsi('stage.vrmeet.io')
   }
 }, 1000)
-
+*/
+    startStream()
 

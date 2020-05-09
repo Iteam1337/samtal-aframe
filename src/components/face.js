@@ -5,6 +5,8 @@ AFRAME.registerComponent('face', {
     userId: { type: 'string' },
     dummy: { type: 'number' },
     position: { type: 'vec3' },
+    leftCheek: { type: 'vec3' },
+    rightCheek: { type: 'vec3' },
     tilt: { type: 'number' },
     roll: { type: 'number' },
     yaw: { type: 'number' },
@@ -23,6 +25,18 @@ AFRAME.registerComponent('face', {
 
   init: function (data) {
     console.log('init face', this.data)
+
+    // Wait for model to load.
+    this.el.addEventListener('model-loaded', () => {
+      // Grab the mesh / scene.
+      const obj = this.el.object3D
+      // Go over the submeshes and modify materials we want.
+      this.bones = {}
+      obj.traverse(node => {
+        if (node.type === 'Bone') this.bones[node.name.toLowerCase()] = node
+      });
+    });
+
     this.leftEyebrowLerp = new KalmanFilter()
     this.rightEyebrowLerp = new KalmanFilter()
     this.rollLerp = new KalmanFilter()
@@ -44,6 +58,23 @@ AFRAME.registerComponent('face', {
   },
 
   tick: function (time, timeDelta) {
+    if (!this.bones) return
+
+    // annotations: 
+    // silhouette. lipsUpperOuter. lipsLowerOuter. lipsUpperInner. lipsLowerInner. rightEyeUpper0. 
+    // rightEyeLower0. rightEyeUpper1. rightEyeLower1. rightEyeUpper2. rightEyeLower2. rightEyeLower3. 
+    // rightEyebrowUpper. rightEyebrowLower. leftEyeUpper0. leftEyeLower0. leftEyeUpper1. leftEyeLower1. 
+    // leftEyeUpper2. leftEyeLower2. leftEyeLower3. leftEyebrowUpper. leftEyebrowLower. midwayBetweenEyes. 
+    // noseTip. noseBottom. noseRightCorner. noseLeftCorner. rightCheek leftCheek
+
+    // bones:
+    // neck, head, eb-raisedl, eb-cornerl, eb-lastl, el-upperl, el-lowerl, nosel, lipl, disgustl, 
+    // chin, cheekl, mouth-o, mouth-ee, mouth-f, mouth-m, mouth-u, eyeballl, eb-raisedr, eb-cornerr, 
+    // eb-lastr, el-upperr, el-lowerr, noser, lipr, disgustr, cheekr, eyeballr, 
+    // eyecontrol, eye-trackl, eye-trackr
+
+    
+
     // update all interpolators
     const leftEyebrowValue = this.leftEyebrowLerp.filter(this.data.leftEyebrow)
     const rightEyebrowValue = this.rightEyebrowLerp.filter(
@@ -94,30 +125,28 @@ AFRAME.registerComponent('face', {
       )
     }
 
-    const neckEl = this.el.getElementsByClassName('theneck')[0]
+    this.bones.neck.position.x = pxValue * 0.1
+    this.bones.neck.position.y = pyValue * 0.1 + 0.6
+    this.bones.neck.position.z = pzValue * 0.1
 
-    if (neckEl) {
-      neckEl.object3D.position.x = pxValue * 0.1
-      neckEl.object3D.position.y = pyValue * 0.1 + 0.6
-      neckEl.object3D.position.z = pzValue * 0.1
-    }
+    this.bones.cheekl.position.set(this.data.leftCheek.x, this.data.leftCheek.y, this.data.leftCheek.z)
+    this.bones.cheekr.position.set(this.data.rightCheek.x, this.data.rightCheek.y, this.data.rightCheek.z)
 
-    const headEl = this.el.getElementsByClassName('thehead')[0]
+
+    this.bones.head.setRotationFromEuler(
+      new THREE.Euler(
+        -THREE.Math.degToRad(30 + yawValue),
+        -THREE.Math.degToRad(tiltValue * 1.75),
+        -THREE.Math.degToRad(rollValue),
+        'ZYX'
+      )
+    )
+
     const markerEl = this.el.getElementsByClassName('themarker')[0]
 
     if (this.isCurrentUser && markerEl) {
       markerEl.setAttribute('visible', 'true')
     }
 
-    if (headEl) {
-      headEl.object3D.setRotationFromEuler(
-        new THREE.Euler(
-          THREE.Math.degToRad(yawValue),
-          THREE.Math.degToRad(tiltValue * 1.75),
-          THREE.Math.degToRad(rollValue),
-          'ZYX'
-        )
-      )
-    }
   },
 })

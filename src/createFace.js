@@ -9,6 +9,7 @@ export const createFace = (scene) => (model, i) => {
     faceEl = document.createElement('a-entity')
     faceEl.setAttribute('template', 'src: #face')
     faceEl.setAttribute('id', id)
+    faceEl.setAttribute('scale', "0.2 0.2 0.2")
     scene.appendChild(faceEl)
   }
 
