@@ -13,14 +13,14 @@
   <body>
   <body>
     <a-scene shadow="type: pcfsoft">
-      <a-entity light="type: ambient; color: #666"></a-entity>
+      <a-entity light="type: ambient; color: #557"></a-entity>
       <a-entity id="spot1target" rotation="-80 0 0" position="-1 7 0">
         <a-entity light="type: spot; color: #EEF; intensity: 1.0; penumbra: 1.0; castShadow: true; shadowCameraVisible: false; shadowMapWidth: 2048; shadowMapHeight: 2048; shadowBias: -0.001;" position="0 0 0">
         </a-entity>
       </a-entity>
 
       <a-assets>
-        <a-asset-item id="room" src="./assets/cineroom.gltf"></a-asset-item>
+        <a-asset-item id="room" src="./assets/concert.gltf"></a-asset-item>
 
         <a-asset-item id="logo" src="./logo.png"></a-asset-item>
         <img id="heart" src="./assets/heart.png">
@@ -91,20 +91,21 @@
             ></a-sphere>
           </a-entity>
         </script>
+        <img id="night" crossorigin="anonymous" src="assets/night.jpg">
+        
       </a-assets>
       <a-entity
         gltf-model="#room"
         position="0 0 -2"
-        rotation="0 90 0"
-        scale="0.2 0.2 0.2"
+        rotation="0 0 0"
+        scale="1 1 1"
         shadow
       ></a-entity>
-      <a-box position="-5.8 0.3 -7.2" material="src: assets/logo.png; roughness: 1; metalness: 0" shadow></a-box>
-      <a-box position="4.0 0.1 -7.2" height="0.5" material="src: assets/iteam.jpg; repeat: 1 2; roughness: 1; metalness: 0" shadow></a-box>
-      <a-box position="4.0 0.6 -7.2" height="0.5" material="src: assets/influera.jpg; repeat: 1 1; roughness: 1; metalness: 0" shadow></a-box>
-      <a-video src="#presentation" id="bigscreen" width="10" height="6.6" position="-0.5 4.5 -7.5"></a-video>
-      <a-sky color="#000"></a-sky>
-
+      <a-box position="-5.8 1.3 -8.5" material="src: assets/logo.png; roughness: 1; metalness: 0" shadow></a-box>
+      <a-box position="4.0 1.1 -8.5" height="0.5" material="src: assets/iteam.jpg; repeat: 1 2; roughness: 1; metalness: 0" shadow></a-box>
+      <a-box position="4.0 1.6 -8.5" height="0.5" material="src: assets/influera.jpg; repeat: 1 1; roughness: 1; metalness: 0" shadow></a-box>
+      <a-video src="#video" id="bigscreen" width="10" height="6.6" position="-0.5 4.5 -12.5"></a-video>
+      <a-sky id="background-img" src="#night"></a-sky>
        <a-entity id="camera-audience" position="-2.3 1.7 -6" rotation="-10 180 0">
         <a-entity class="camera" camera="active: false" look-controls
           wasd-controls></a-entity>

@@ -227,49 +227,86 @@ const startStream = async (video) => {
 
 
 const startJitsi = (roomName) => {
+  
+  JitsiMeetJS.setLogLevel(JitsiMeetJS.logLevels.ERROR);
   JitsiMeetJS.init()
   var connection = new JitsiMeetJS.JitsiConnection(null, null, {
     hosts: {
-      domain: 'beta.meet.jit.si',
-      muc: 'conference.beta.meet.jit.si', // FIXME: use XEP-0030
-      focus: 'focus.beta.meet.jit.si',
-    },
-    bosh:'https://beta.meet.jit.si/http-bind', 
-    clientNode: 'http://jitsi.org/jitsimeet'
+      domain: 'meet.jit.si',
+      muc: 'conference.meet.jit.si',
+      focus: 'focus.meet.jit.si'
+      },
+      // disableSimulcast: false,
+      // enableRemb: true,
+      // resolution: 640,
+      // constraints: {
+      //   video: {
+      //     height: {
+      //       ideal: 320,
+      //       max: 320,
+      //       min: 160
+      //     },
+      //     width: {
+      //       ideal: 320,
+      //       max: 320,
+      //       min: 160
+      //     }
+      //   }
+      // },
+      externalConnectUrl: 'https://meet.jit.si/http-pre-bind',
+      enableP2P: true,
+      p2p: {
+        enabled: true,
+        preferH264: true,
+        disableH264: true,
+        useStunTurn: true
+      },
+      useStunTurn: true,
+      // serviceUrl: `https://meet.jit.si/http-bind?room=${CONFERENCE_ROOM_NAME}`,
+      bosh: `https://meet.jit.si/http-bind?room=${roomName}`,
+      websocket: 'wss://meet.jit.si/xmpp-websocket', // FIXME: use xep-0156 for that
+      clientNode: 'http://jitsi.org/jitsimeet',
   })
   connection.connect();
+
+  
   connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED, () => {
     console.log('Jitsi connection established')
     const room = connection.initJitsiConference(roomName, {
       // add options here
+      openBridgeChannel: true
     })
+    room.on(JitsiMeetJS.events.conference.TRACK_ADDED, onRemoteTrack);
+
+    function onRemoteTrack(track) {
+      console.log('remote track', track.isLocal(), track)
+      if (track.isLocal()) {
+        return;
+      }
+      if (track.getType() === 'video') {
+        const video = document.getElementById('presentation')
+        track.attach(video);
+      } // todo: handle audio
+    }
+
     function onLocalTracks(tracks) {
       localTracks = tracks
       localTracks.forEach((track, i) => {
         console.log('track', track)
         if (track.getType() === 'video') {
-          const video = document.createElement('video')
-          video.id = `localVideo${i}`
-          document.body.appendChild(video)
-          document.getElementById('bigscreen').src = '#' + video.id
+          const video = document.getElementById('video')
           track.attach(video)
-        } else {
-          const audio = document.createElement('audio')
-          audio.id = `localAudio${i}`
-          document.body.appendChild(audio)
-          track.attach(audio);
-        }
-        if (isJoined) {
-            room.addTrack(track);
-        }
+        } // todo: handle audio
+        room.addTrack(track);
       })
     }
     console.log('Creating local tracks...')
-    JitsiMeetJS.createLocalTracks().then(onLocalTracks);
+    JitsiMeetJS.createLocalTracks({devices: ['video']}).then(onLocalTracks);
+
   })
 }
 
-
+/*
 setTimeout(() => {
   if (
     confirm(`Welcome to VR meet!
@@ -281,9 +318,13 @@ We take your privacy seriously, read more at vrmeet.io/tech.
 
 Take a seat and don't forget to invite your friends!`)
 ) {
-    startStream()
-    // startJitsi('stage.vrmeet.io')
+    // startStream()
+    startJitsi('stage.vrmeet.io')
   }
 }, 1000)
+*/
 
+startJitsi('stagevrmeetio')
+startStream()
 
+// debugFaces()
