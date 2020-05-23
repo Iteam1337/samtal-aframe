@@ -16,6 +16,8 @@ import './styles.css'
 import './camera'
 import './emoji'
 import cuid from 'cuid'
+import { startJitsi } from './jitsi'
+
 import { createFace } from './createFace'
 import {
   pick,
@@ -144,58 +146,8 @@ async function main() {
   })
 }
 
-function createMockFace(id) {
-  return {
-    id: id,
-    position: {
-      x: -1 + Math.random() * 2,
-      y: -1 + Math.random() * 2,
-      z: -1 + Math.random() * 2,
-    },
-    tilt: -25 + Math.random() * 50,
-    yaw: -25 + Math.random() * 50,
-    roll: -25 + Math.random() * 50,
-    leftEyebrow: Math.random() * 1.0,
-    rightEyebrow: Math.random() * 1.0,
-    mouth: {
-      height: Math.random() * 1.0,
-      width: Math.random() * 1.0,
-    },
-    expressions: {
-      smile: 0,
-    },
-  }
-}
-
-let useSocket = true
-global.debugFaces = () => {
-  useSocket = false
-
-  for (var i = 0; i < 40; i++) createFace(scene)(createMockFace(`face${i}`), i)
-
-  setInterval(() => {
-    for (var i = 0; i < 40; i += 4)
-      createFace(scene)(createMockFace(`face${i}`), i)
-  }, 600)
-  setInterval(() => {
-    for (var i = 1; i < 40; i += 4)
-      createFace(scene)(createMockFace(`face${i}`), i)
-  }, 700)
-  setInterval(() => {
-    for (var i = 2; i < 40; i += 4)
-      createFace(scene)(createMockFace(`face${i}`), i)
-  }, 800)
-  setInterval(() => {
-    for (var i = 3; i < 40; i += 4)
-      createFace(scene)(createMockFace(`face${i}`), i)
-  }, 900)
-}
-
 socket.on('faces', (faces) => {
   if (!AFRAME.scenes.length) {
-    return
-  }
-  if (!useSocket) {
     return
   }
 
@@ -219,91 +171,10 @@ const startStream = async (video) => {
     video.onloadeddata = () => main()
   } catch (err) {
     alert(
-      'Sorry. We got an error. Please make sure you use Google Chrome. You can still walk around in the room. ' +
+      'Sorry. We got an error. Please make sure you use Google Chrome. You can still look around. ' +
         err.message
     )
   }
-}
-
-
-const startJitsi = (roomName) => {
-  
-  JitsiMeetJS.setLogLevel(JitsiMeetJS.logLevels.ERROR);
-  JitsiMeetJS.init()
-  var connection = new JitsiMeetJS.JitsiConnection(null, null, {
-    hosts: {
-      domain: 'meet.jit.si',
-      muc: 'conference.meet.jit.si',
-      focus: 'focus.meet.jit.si'
-      },
-      // disableSimulcast: false,
-      // enableRemb: true,
-      // resolution: 640,
-      // constraints: {
-      //   video: {
-      //     height: {
-      //       ideal: 320,
-      //       max: 320,
-      //       min: 160
-      //     },
-      //     width: {
-      //       ideal: 320,
-      //       max: 320,
-      //       min: 160
-      //     }
-      //   }
-      // },
-      externalConnectUrl: 'https://meet.jit.si/http-pre-bind',
-      enableP2P: true,
-      p2p: {
-        enabled: true,
-        preferH264: true,
-        disableH264: true,
-        useStunTurn: true
-      },
-      useStunTurn: true,
-      // serviceUrl: `https://meet.jit.si/http-bind?room=${CONFERENCE_ROOM_NAME}`,
-      bosh: `https://meet.jit.si/http-bind?room=${roomName}`,
-      websocket: 'wss://meet.jit.si/xmpp-websocket', // FIXME: use xep-0156 for that
-      clientNode: 'http://jitsi.org/jitsimeet',
-  })
-  connection.connect();
-
-  
-  connection.addEventListener(JitsiMeetJS.events.connection.CONNECTION_ESTABLISHED, () => {
-    console.log('Jitsi connection established')
-    const room = connection.initJitsiConference(roomName, {
-      // add options here
-      openBridgeChannel: true
-    })
-    room.on(JitsiMeetJS.events.conference.TRACK_ADDED, onRemoteTrack);
-
-    function onRemoteTrack(track) {
-      console.log('remote track', track.isLocal(), track)
-      if (track.isLocal()) {
-        return;
-      }
-      if (track.getType() === 'video') {
-        const video = document.getElementById('presentation')
-        track.attach(video);
-      } // todo: handle audio
-    }
-
-    function onLocalTracks(tracks) {
-      localTracks = tracks
-      localTracks.forEach((track, i) => {
-        console.log('track', track)
-        if (track.getType() === 'video') {
-          const video = document.getElementById('video')
-          track.attach(video)
-        } // todo: handle audio
-        room.addTrack(track);
-      })
-    }
-    console.log('Creating local tracks...')
-    JitsiMeetJS.createLocalTracks({devices: ['video']}).then(onLocalTracks);
-
-  })
 }
 
 /*
@@ -324,7 +195,7 @@ Take a seat and don't forget to invite your friends!`)
 }, 1000)
 */
 
-startJitsi('stagevrmeetio')
+startJitsi('stagevrmeetio', document.getElementById('video'), document.getElementById('presentation'))
 startStream()
 
 // debugFaces()

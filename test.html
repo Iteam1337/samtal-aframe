@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.slim.min.js"></script> 
+    <script src="https://meet.jit.si/libs/lib-jitsi-meet.min.js"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+  </head>
+  <body>
+  <body>
+    <a href="https://vrmeet.io"><img id="logo" src="./assets/vrmeet-lowres.png" style="width: 90px; position: fixed; top: 15px; left: 10px;"></a>
+
+    <video
+      id="presentation"
+      height="200"
+      width="200"
+      style="position: fixed; bottom: 0; left: 0;"
+      autoplay
+    ></video>
+      
+    <video
+      id="video"
+      height="200"
+      width="200"
+      style="position: fixed; bottom: 0; right: 0;"
+      autoplay
+      playsinline
+      muted
+    ></video>
+    <button style="position: absolute; top:50%; left: 50%;" id="start">Start Video</button>
+    <script src="./src/test.js" type="text/javascript"></script>
+  </body>
+</html>
