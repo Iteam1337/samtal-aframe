@@ -9,10 +9,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.slim.min.js"></script> 
     <script src="https://meet.jit.si/libs/lib-jitsi-meet.min.js"></script>
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>
+      vrmeet.io - see your fans
+    </title>
   </head>
   <body>
   <body>
-    <a-scene shadow="type: pcfsoft">
+    <a-scene shadow="type: pcfsoft" loading-screen="dotsColor: white; backgroundColor: black">
       <a-entity light="type: ambient; color: #446"></a-entity>
       <a-entity id="spot1target" rotation="-80 -90 45" position="10 7 -7">
         <a-entity light="type: spot; color: #AAF; intensity: 1.0; penumbra: 1.0; castShadow: true; shadowCameraVisible: false; shadowMapWidth: 128; shadowMapHeight: 128; shadowBias: -0.01;" position="0 0 0">
