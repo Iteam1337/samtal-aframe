@@ -9,7 +9,7 @@ const Bundler = require('parcel-bundler')
 server.listen(port)
 console.log('listening on port ', port)
 
-const bundler = new Bundler('index.html', { hmr: false })
+const bundler = new Bundler('test.html', { hmr: false })
 
 app.use('/assets', express.static(path.join(__dirname, './assets')))
 app.use(bundler.middleware())

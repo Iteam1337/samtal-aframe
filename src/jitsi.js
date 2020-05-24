@@ -8,15 +8,26 @@ export async function startJitsi (roomName, videoElement, presentationElement) {
 
   const config = {
     hosts: {
-      domain: 'jitsi.vrmeet.io',
-      muc: 'conference.jitsi.vrmeet.io'
+      domain: 'beta.meet.jit.si',
+      muc: 'conference.beta.meet.jit.si'
     },
-    bosh: 'https://jitsi.vrmeet.io/http-bind',
-    //serviceUrl: 'wss://jitsi.vrmeet.io/xmpp-websocket',
-    websocket: 'wss://jitsi.vrmeet.io/xmpp-websocket',
+    serviceUrl: 'wss://beta.meet.jit.si/xmpp-websocket',
+    clientNode: 'https://beta.meet.jit.si',
+  };
+
+  const customConfig = {
+    hosts: {
+      domain: 'jitsi.vrmeet.io',
+      muc: 'jitsi.vrmeet.io'
+    },
+    //bosh: 'https://jitsi.vrmeet.io/http-bind',
+    serviceUrl: 'https://jitsi.vrmeet.io/http-bind',
+    //websocket: 'wss://jitsi.vrmeet.io/xmpp-websocket',
+    //serviceUrl: 'wss://meet.jit.si/xmpp-websocket',
 
     clientNode: 'https://jitsi.vrmeet.io',
   };
+
 
 
   const connection = new JitsiMeetJS.JitsiConnection(null, null, config)
