@@ -29,7 +29,7 @@ export async function startJitsi (roomName, videoElement, presentationElement) {
     room.on(JitsiMeetJS.events.conference.TRACK_ADDED, onTrackAdded)
       room.join()
       JitsiMeetJS.createLocalTracks({ devices: [ 'audio', 'video' ] }).then(localTracks =>{
-      localTracks.forEach(track => room.addTrack(track))
+      // localTracks.forEach(track => room.addTrack(track))
     })
   }
 
