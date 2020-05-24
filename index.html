@@ -13,12 +13,27 @@
   <body>
   <body>
     <a-scene shadow="type: pcfsoft">
-      <a-entity light="type: ambient; color: #557"></a-entity>
-      <a-entity id="spot1target" rotation="-80 0 0" position="-1 7 0">
-        <a-entity light="type: spot; color: #EEF; intensity: 1.0; penumbra: 1.0; castShadow: true; shadowCameraVisible: false; shadowMapWidth: 2048; shadowMapHeight: 2048; shadowBias: -0.001;" position="0 0 0">
+      <a-entity light="type: ambient; color: #446"></a-entity>
+      <a-entity id="spot1target" rotation="-80 -90 45" position="10 7 -7">
+        <a-entity light="type: spot; color: #AAF; intensity: 1.0; penumbra: 1.0; castShadow: true; shadowCameraVisible: false; shadowMapWidth: 128; shadowMapHeight: 128; shadowBias: -0.01;" position="0 0 0">
         </a-entity>
       </a-entity>
 
+      <a-entity id="spot2target" rotation="-80 -90 -45" position="-10 7 -7">
+        <a-entity light="type: spot; color: #FAA; intensity: 1.0; penumbra: 1.0; castShadow: true; shadowCameraVisible: false; shadowMapWidth: 128; shadowMapHeight: 128; shadowBias: -0.01;" position="0 0 0">
+        </a-entity>
+      </a-entity>
+
+      <a-entity id="spot3target" rotation="-80 -90 0" position="0 4 -7">
+        <a-entity light="type: spot; color: #AFA; intensity: 1.0; penumbra: 1.0; castShadow: true; shadowCameraVisible: false; shadowMapWidth: 128; shadowMapHeight: 128; shadowBias: -0.01;" position="0 0 0">
+        </a-entity>
+      </a-entity>
+
+
+      <a-entity id="spot4target" rotation="-80 0 0" position="0 7 5">
+        <a-entity light="type: spot; color: #DFD; intensity: 0.5; penumbra: 1.0; castShadow: true; shadowCameraVisible: false; shadowMapWidth: 128; shadowMapHeight: 128; shadowBias: -0.01;" position="0 0 0">
+        </a-entity>
+      </a-entity>
       <a-assets>
         <a-asset-item id="room" src="./assets/concert.gltf"></a-asset-item>
 
@@ -131,8 +146,8 @@
 
     <video
       id="presentation"
-      height="2"
-      width="2"
+      height="100"
+      width="100"
       style="position: fixed; bottom: 0; left: 0;"
       autoplay
       playsinline
@@ -140,12 +155,11 @@
       
     <video
       id="video"
-      height="200"
-      width="200"
+      height="2"
+      width="2"
       style="position: fixed; bottom: 0; right: 0;"
       autoplay
       playsinline
-      muted
     ></video>
     <audio id="surprise" src="/sounds/aha.mp3"></audio>
     <audio id="happy" src="/sounds/laugh.wav"></audio>

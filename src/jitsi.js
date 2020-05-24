@@ -35,9 +35,19 @@ export async function startJitsi (roomName, videoElement, presentationElement) {
 
   function onTrackAdded(track) {
     console.log('track added, remote?', !track.isLocal())
+
+   
+    
     if (track.getType() === 'video') {
       const video = track.isLocal() ? videoElement : presentationElement
       track.attach(video);
-    } // todo: handle audio
+    }  else {
+      console.log('audio')
+        const audio = document.createElement('audio')
+        audio.autoplay = true
+        audio.id=track.toString()
+        document.body.appendChild(audio)
+      track.attach(audio);
+    }
   }
 }

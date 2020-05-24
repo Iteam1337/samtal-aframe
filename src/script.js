@@ -60,13 +60,13 @@ const detectFace = async (model, video, emitFace) => {
 
       const center = getPositions(annotations.midwayBetweenEyes[0])
 
-      movingAverageCenter.x *= 0.6
-      movingAverageCenter.y *= 0.6
-      movingAverageCenter.z *= 0.6
+      movingAverageCenter.x *= 0.9
+      movingAverageCenter.y *= 0.9
+      movingAverageCenter.z *= 0.9
 
-      movingAverageCenter.x += 0.4 * center.x
-      movingAverageCenter.y += 0.4 * center.y
-      movingAverageCenter.z += 0.4 * center.z
+      movingAverageCenter.x += 0.1 * center.x
+      movingAverageCenter.y += 0.1 * center.y
+      movingAverageCenter.z += 0.1 * center.z
 
       const baseTilt = calculateTilt(face) / 2.0 // turn head, look left/right
       const baseYaw = calculateYaw(face) / 1.5 // look up/down
