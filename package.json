@@ -23,6 +23,7 @@
     "@tensorflow/tfjs-backend-wasm": "^1.7.2",
     "@tensorflow/tfjs-converter": "^1.7.2",
     "@tensorflow/tfjs-core": "^1.7.2",
+    "aframe-watcher": "^1.4.0",
     "babel-polyfill": "^6.26.0",
     "cuid": "2.1.8",
     "express": "^4.17.1",
