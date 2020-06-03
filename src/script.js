@@ -194,8 +194,8 @@ Take a seat and don't forget to invite your friends!`)
   }
 }, 1000)
 */
-
-startJitsi('stagevrmeetio', document.getElementById('video'), document.getElementById('presentation'))
+const subdomain = window.location.host.split('.')[0]
+startJitsi(subdomain, document.getElementById('video'), document.getElementById('presentation'))
 startStream()
 
 // debugFaces()
